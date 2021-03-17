@@ -1,0 +1,41 @@
+[package]
+name = "cogl-rs"
+version = "0.1.0"
+authors = ["Victor Dudochkin <dudochkin.victor@gmail.com>"]
+homepage = "https://angular-rust.github.io/"
+documentation = "https://angular-rust.github.io/"
+description = "Rust bindings for the Cogl library"
+repository = "https://github.com/angular-rust/cogl-rs"
+keywords = ["cogl", "gtk", "gtk-rs", "gnome", "gui"]
+license = "MPL-2.0"
+readme = "README.md"
+edition = "2018"
+
+[lib]
+name = "cogl"
+
+[features]
+v3_16 = ["gdk-sys/v3_16"]
+v3_18 = ["v3_16", "gdk-sys/v3_18"]
+v3_20 = ["v3_18", "gdk-sys/v3_20"]
+v3_22 = ["v3_20", "gdk-sys/v3_22"]
+v3_24 = ["v3_22", "gdk-sys/v3_24"]
+
+[dependencies]
+libc = "0.2"
+bitflags = "1.0"
+glib-sys = "0.10"
+gdk-sys = "0.10"
+gio-sys = "0.10"
+gobject-sys = "0.10"
+cairo-sys-rs = "0.10"
+cairo-rs = "0.9"
+gdk-pixbuf = "0.9"
+gio = "0.9"
+glib = "0.10"
+pango = "0.9"
+
+ffi = { package = "cogl-sys-rs", path = "sys" }
+
+[dev-dependencies]
+gir-format-check = "^0.1"
