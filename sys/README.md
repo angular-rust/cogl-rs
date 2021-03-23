@@ -1,6 +1,6 @@
 <div id="top" align="center">
 
-# cogl-rs
+# cogl-sys-rs
 
 [![API Docs][docrs-badge]][docrs-url]
 [![Crates.io][crates-badge]][crates-url]
@@ -10,10 +10,10 @@
 [![loc][loc-badge]][loc-url]
 </div>
 
-[docrs-badge]: https://img.shields.io/docsrs/cogl-rs?style=flat-square
-[docrs-url]: https://docs.rs/cogl-rs/
-[crates-badge]: https://img.shields.io/crates/v/cogl-rs.svg?style=flat-square
-[crates-url]: https://crates.io/crates/cogl-rs
+[docrs-badge]: https://img.shields.io/docsrs/cogl-sys-rs?style=flat-square
+[docrs-url]: https://docs.rs/cogl-sys-rs/
+[crates-badge]: https://img.shields.io/crates/v/cogl-sys-rs.svg?style=flat-square
+[crates-url]: https://crates.io/crates/cogl-sys-rs
 [license-badge]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [license-url]: https://github.com/angular-rust/cogl-rs/blob/master/LICENSE
 [gitter-badge]: https://img.shields.io/gitter/room/angular_rust/angular_rust.svg?style=flat-square
@@ -23,7 +23,7 @@
 [loc-badge]: https://tokei.rs/b1/github/angular-rust/cogl-rs?category=code
 [loc-url]: https://github.com/angular-rust/cogl-rs
 
-**cogl-rs** is Rust bindings for the Cogl library. cogl-rs is being developed in the Angular Rust infrastructure since Angular Rust depends on it.
+**cogl-sys-rs** is FFI bindings to Cogl library. cogl-sys-rs is being developed in the Angular Rust infrastructure since Angular Rust depends on it.
 
 **Angular Rust** is a high productivity, `platform-agnostic` frontend framework for the [Rust language](https://www.rust-lang.org/). It now supports desktop and web development. Angular Rust currently uses GTK for desktop development and WebAssembly for web development. We are planning to add support for mobile development.
 
@@ -53,7 +53,7 @@ Install Angular Rust:
 
 We believe the wider community can create better code. The first tool for improving the community is to tell the developers about the project by giving it a star. More stars - more members.
 
- [![](https://dudochkin-victor.github.io/assets/star-me-wide.svg)](https://github.com/angular-rust/cogl-rs#top)
+[![](https://dudochkin-victor.github.io/assets/star-me-wide.svg)](https://github.com/angular-rust/cogl-rs#top)
  
 Angular Rust is a community effort and we welcome all kinds of contributions, big or small, from developers of all backgrounds. We want the Angular Rust community to be a fun and friendly place, so please review our [Code of Conduct](CODE_OF_CONDUCT.md) to learn what behavior will not be tolerated.
 

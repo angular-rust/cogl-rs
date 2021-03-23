@@ -2,13 +2,14 @@
 name = "cogl-rs"
 version = "0.1.0"
 authors = ["Victor Dudochkin <dudochkin.victor@gmail.com>"]
-homepage = "https://angular-rust.github.io/"
-documentation = "https://angular-rust.github.io/"
-description = "Rust bindings for the Cogl library"
-repository = "https://github.com/angular-rust/cogl-rs"
-keywords = ["cogl", "gtk", "gtk-rs", "gnome", "gui"]
-license = "MPL-2.0"
 readme = "README.md"
+homepage = "https://angular-rust.github.io/cogl-rs"
+repository = "https://github.com/angular-rust/cogl-rs"
+documentation = "https://docs.rs/cogl-rs"
+description = "Rust bindings for the Cogl library"
+keywords = ["cogl", "gtk", "gtk-rs", "gnome", "gui"]
+categories = ["multimedia", "gui"]
+license = "MPL-2.0"
 edition = "2018"
 
 [lib]

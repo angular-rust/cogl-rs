@@ -2,7 +2,16 @@
 name = "cogl-sys-rs"
 version = "0.1.0"
 authors = ["Victor Dudochkin <dudochkin.victor@gmail.com>"]
+readme = "README.md"
+homepage = "https://angular-rust.github.io/cogl-rs"
+repository = "https://github.com/angular-rust/cogl-rs"
+documentation = "https://docs.rs/cogl-sys-rs"
+description = "FFI bindings to Cogl library"
+keywords = ["cogl", "gtk", "gtk-rs", "gnome", "gui"]
+categories = ["multimedia", "gui"]
+license = "MPL-2.0"
 edition = "2018"
+
 links = "\"cogl\""
 build = "build.rs"
 
