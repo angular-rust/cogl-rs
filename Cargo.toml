@@ -36,7 +36,7 @@ gio = "0.9"
 glib = "0.10"
 pango = "0.9"
 
-ffi = { package = "cogl-sys-rs", path = "sys" }
+ffi = { package = "cogl-sys-rs", version="0.1", path = "sys" }
 
 [dev-dependencies]
 gir-format-check = "^0.1"
