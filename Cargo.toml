@@ -16,25 +16,15 @@ edition = "2018"
 name = "cogl"
 
 [features]
-v3_16 = ["gdk-sys/v3_16"]
-v3_18 = ["v3_16", "gdk-sys/v3_18"]
-v3_20 = ["v3_18", "gdk-sys/v3_20"]
-v3_22 = ["v3_20", "gdk-sys/v3_22"]
-v3_24 = ["v3_22", "gdk-sys/v3_24"]
+dox = ["ffi/dox", "glib/dox", "glib-sys/dox", "gobject-sys/dox"]
+v2_0 = []
 
 [dependencies]
 libc = "0.2"
 bitflags = "1.0"
-glib-sys = "0.10"
-gdk-sys = "0.10"
-gio-sys = "0.10"
 gobject-sys = "0.10"
-cairo-sys-rs = "0.10"
-cairo-rs = "0.9"
-gdk-pixbuf = "0.9"
-gio = "0.9"
 glib = "0.10"
-pango = "0.9"
+glib-sys = "0.10"
 
 ffi = { package = "cogl-sys-rs", version="0.1", path = "sys" }
 

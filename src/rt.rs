@@ -1,6 +1,6 @@
 #![allow(unused_macros)]
 
-// use cogl_sys;
+// use ffi;
 use std::cell::Cell;
 // use std::ptr;
 use std::sync::atomic::{AtomicBool, Ordering, ATOMIC_BOOL_INIT};

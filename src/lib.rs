@@ -21,11 +21,22 @@ mod auto;
 
 pub use auto::*;
 
-pub use ffi::CoglAngle as Angle;
-pub use ffi::CoglBool as Bool;
-pub use ffi::CoglHandle as Handle;
-pub use ffi::CoglMaterial as Material;
-pub use ffi::CoglMaterialLayer as MaterialLayer;
+pub use ffi::CoglOnscreenDirtyInfo as OnscreenDirtyInfo;
+pub use ffi::CoglVertexP2 as VertexP2;
+pub use ffi::CoglVertexP2C4 as VertexP2C4;
+pub use ffi::CoglVertexP2T2 as VertexP2T2;
+pub use ffi::CoglVertexP2T2C4 as VertexP2T2C4;
+pub use ffi::CoglVertexP3 as VertexP3;
+pub use ffi::CoglVertexP3C4 as VertexP3C4;
+pub use ffi::CoglVertexP3T2 as VertexP3T2;
+pub use ffi::CoglVertexP3T2C4 as VertexP3T2C4;
+
+// pub use ffi::CoglAngle as Angle;
+// pub use ffi::CoglBool as Bool;
+// pub use ffi::CoglHandle as Handle;
+
+// pub use ffi::CoglMaterial as Material;
+// pub use ffi::CoglMaterialLayer as MaterialLayer;
 
 // pub type CoglAngle = i32;
 // pub type CoglBool = c_int;
@@ -47,11 +58,8 @@ pub use ffi::CoglMaterialLayer as MaterialLayer;
 // mod event_key;
 // mod event_motion;
 // mod event_owner_change;
-// #[cfg(any(feature = "v3_22", feature = "dox"))]
 // mod event_pad_axis;
-// #[cfg(any(feature = "v3_22", feature = "dox"))]
 // mod event_pad_button;
-// #[cfg(any(feature = "v3_22", feature = "dox"))]
 // mod event_pad_group_mode;
 // mod event_property;
 // mod event_proximity;
@@ -80,7 +88,6 @@ pub use ffi::CoglMaterialLayer as MaterialLayer;
 // mod window;
 
 // pub use gdk_sys::GdkColor as Color;
-
 // pub use self::rt::{init, set_initialized};
 
 // pub use atom::Atom;
@@ -113,11 +120,11 @@ pub use ffi::CoglMaterialLayer as MaterialLayer;
 // pub use event_key::EventKey;
 // pub use event_motion::EventMotion;
 // pub use event_owner_change::EventOwnerChange;
-// #[cfg(any(feature = "v3_22", feature = "dox"))]
 // pub use event_pad_axis::EventPadAxis;
+
 // #[cfg(any(feature = "v3_22", feature = "dox"))]
 // pub use event_pad_button::EventPadButton;
-// #[cfg(any(feature = "v3_22", feature = "dox"))]
+
 // pub use event_pad_group_mode::EventPadGroupMode;
 // pub use event_property::EventProperty;
 // pub use event_proximity::EventProximity;

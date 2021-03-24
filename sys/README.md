@@ -32,7 +32,7 @@ It is not tied to any one toolkit or even constrained to developing UI toolkits.
 
 ## Quick Start
 
-Install Angular Rust:
+Install Cogl-rs:
 
 	cargo add cogl-rs
 

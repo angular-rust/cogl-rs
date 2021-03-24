@@ -1,6 +1,15 @@
 # Changelog
 
-## Package vX.X.X (YYYY-MM-DD) 
+## cogl-rs vX.X.X (YYYY-MM-DD) 
+
+### Improved
+
+- Moved to Cogl-2.0
+
+---
+**template**
+
+## cogl-rs vX.X.X (YYYY-MM-DD) 
 
 ### Improved
 
