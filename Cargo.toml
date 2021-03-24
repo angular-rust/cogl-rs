@@ -1,6 +1,6 @@
 [package]
 name = "cogl-rs"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Victor Dudochkin <dudochkin.victor@gmail.com>"]
 readme = "README.md"
 homepage = "https://angular-rust.github.io/cogl-rs"
@@ -15,9 +15,11 @@ edition = "2018"
 [lib]
 name = "cogl"
 
+[package.metadata.docs.rs]
+features = ["dox"]
+
 [features]
 dox = ["ffi/dox", "glib/dox", "glib-sys/dox", "gobject-sys/dox"]
-v2_0 = []
 
 [dependencies]
 libc = "0.2"

@@ -1,6 +1,6 @@
 [package]
 name = "cogl-sys-rs"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Victor Dudochkin <dudochkin.victor@gmail.com>"]
 readme = "README.md"
 homepage = "https://angular-rust.github.io/cogl-rs"
@@ -13,11 +13,11 @@ license = "MPL-2.0"
 edition = "2018"
 links = "\"cogl\""
 build = "build.rs"
+
 [package.metadata.system-deps.cogl_2_0_experimental]
 name = "cogl-2.0-experimental"
 version = "2.0"
 
-[package.metadata.system-deps.cogl_2_0_experimental.feature-versions]
 [package.metadata.docs.rs]
 features = ["dox"]
 
