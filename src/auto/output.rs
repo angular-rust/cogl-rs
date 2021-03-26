@@ -1,5 +1,5 @@
 use crate::{Object, SubpixelOrder};
-use ffi;
+
 use glib::translate::*;
 use std::fmt;
 
@@ -66,11 +66,7 @@ impl Output {
     ///
     /// the order of subpixel components for the output device
     pub fn get_subpixel_order(&self) -> SubpixelOrder {
-        unsafe {
-            from_glib(ffi::cogl_output_get_subpixel_order(
-                self.to_glib_none().0,
-            ))
-        }
+        unsafe { from_glib(ffi::cogl_output_get_subpixel_order(self.to_glib_none().0)) }
     }
 
     /// Gets the width of the output in pixels.

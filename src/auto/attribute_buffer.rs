@@ -1,5 +1,5 @@
 use crate::{Context, Object};
-use ffi;
+
 use glib::translate::*;
 use std::fmt;
 
@@ -17,7 +17,6 @@ impl AttributeBuffer {
     //}
 
     pub fn with_size(context: &Context, bytes: usize) -> AttributeBuffer {
-        skip_assert_initialized!();
         unsafe {
             from_glib_full(ffi::cogl_attribute_buffer_new_with_size(
                 context.to_glib_none().0,

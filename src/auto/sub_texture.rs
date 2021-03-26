@@ -1,5 +1,5 @@
 use crate::{Context, Object, Texture};
-use ffi;
+
 use glib::object::IsA;
 use glib::translate::*;
 use std::fmt;
@@ -53,7 +53,6 @@ impl SubTexture {
         sub_width: i32,
         sub_height: i32,
     ) -> SubTexture {
-        skip_assert_initialized!();
         unsafe {
             from_glib_full(ffi::cogl_sub_texture_new(
                 ctx.to_glib_none().0,

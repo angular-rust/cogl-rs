@@ -1,4 +1,3 @@
-use ffi;
 use glib::translate::*;
 use glib::{
     value::{FromValue, FromValueOptional, SetValue, Value},
@@ -26,7 +25,6 @@ impl ToGlib for BufferAccess {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglBufferAccess> for BufferAccess {
     fn from_glib(value: ffi::CoglBufferAccess) -> BufferAccess {
-        skip_assert_initialized!();
         BufferAccess::from_bits_truncate(value)
     }
 }
@@ -51,7 +49,6 @@ impl ToGlib for BufferBit {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglBufferBit> for BufferBit {
     fn from_glib(value: ffi::CoglBufferBit) -> BufferBit {
-        skip_assert_initialized!();
         BufferBit::from_bits_truncate(value)
     }
 }
@@ -80,29 +77,28 @@ impl SetValue for BufferBit {
     }
 }
 
-// bitflags! {
-//     pub struct BufferMapHint: u32 {
-//         const _ = 1;
-//         const __RANGE = 2;
-//     }
-// }
+bitflags! {
+    pub struct BufferMapHint: u32 {
+        const DISCARD = 1;
+        const DISCARD_RANGE = 2;
+    }
+}
 
-// #[doc(hidden)]
-// impl ToGlib for BufferMapHint {
-//     type GlibType = ffi::CoglBufferMapHint;
+#[doc(hidden)]
+impl ToGlib for BufferMapHint {
+    type GlibType = ffi::CoglBufferMapHint;
 
-//     fn to_glib(&self) -> ffi::CoglBufferMapHint {
-//         self.bits()
-//     }
-// }
+    fn to_glib(&self) -> ffi::CoglBufferMapHint {
+        self.bits()
+    }
+}
 
-// #[doc(hidden)]
-// impl FromGlib<ffi::CoglBufferMapHint> for BufferMapHint {
-//     fn from_glib(value: ffi::CoglBufferMapHint) -> BufferMapHint {
-//         skip_assert_initialized!();
-//         BufferMapHint::from_bits_truncate(value)
-//     }
-// }
+#[doc(hidden)]
+impl FromGlib<ffi::CoglBufferMapHint> for BufferMapHint {
+    fn from_glib(value: ffi::CoglBufferMapHint) -> BufferMapHint {
+        BufferMapHint::from_bits_truncate(value)
+    }
+}
 
 bitflags! {
     pub struct BufferTarget: u32 {
@@ -123,7 +119,6 @@ impl ToGlib for BufferTarget {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglBufferTarget> for BufferTarget {
     fn from_glib(value: ffi::CoglBufferTarget) -> BufferTarget {
-        skip_assert_initialized!();
         BufferTarget::from_bits_truncate(value)
     }
 }
@@ -175,7 +170,6 @@ impl ToGlib for ColorMask {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglColorMask> for ColorMask {
     fn from_glib(value: ffi::CoglColorMask) -> ColorMask {
-        skip_assert_initialized!();
         ColorMask::from_bits_truncate(value)
     }
 }
@@ -245,7 +239,6 @@ impl ToGlib for FeatureFlags {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglFeatureFlags> for FeatureFlags {
     fn from_glib(value: ffi::CoglFeatureFlags) -> FeatureFlags {
-        skip_assert_initialized!();
         FeatureFlags::from_bits_truncate(value)
     }
 }
@@ -292,7 +285,6 @@ impl ToGlib for ReadPixelsFlags {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglReadPixelsFlags> for ReadPixelsFlags {
     fn from_glib(value: ffi::CoglReadPixelsFlags) -> ReadPixelsFlags {
-        skip_assert_initialized!();
         ReadPixelsFlags::from_bits_truncate(value)
     }
 }
@@ -342,7 +334,6 @@ impl ToGlib for RendererConstraint {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglRendererConstraint> for RendererConstraint {
     fn from_glib(value: ffi::CoglRendererConstraint) -> RendererConstraint {
-        skip_assert_initialized!();
         RendererConstraint::from_bits_truncate(value)
     }
 }
@@ -368,7 +359,6 @@ impl ToGlib for TextureFlags {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglTextureFlags> for TextureFlags {
     fn from_glib(value: ffi::CoglTextureFlags) -> TextureFlags {
-        skip_assert_initialized!();
         TextureFlags::from_bits_truncate(value)
     }
 }

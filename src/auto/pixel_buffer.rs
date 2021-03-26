@@ -1,5 +1,5 @@
 use crate::Object;
-use ffi;
+
 use glib::translate::*;
 use std::fmt;
 

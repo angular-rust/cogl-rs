@@ -1,5 +1,5 @@
 use crate::{IndexBuffer, IndicesType, Object};
-use ffi;
+
 use glib::translate::*;
 use std::fmt;
 
@@ -17,7 +17,6 @@ impl Indices {
     //}
 
     pub fn new_for_buffer(type_: IndicesType, buffer: &IndexBuffer, offset: usize) -> Indices {
-        skip_assert_initialized!();
         unsafe {
             from_glib_full(ffi::cogl_indices_new_for_buffer(
                 type_.to_glib(),

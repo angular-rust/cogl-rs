@@ -1,4 +1,3 @@
-use ffi;
 use gobject_sys;
 
 glib_wrapper! {

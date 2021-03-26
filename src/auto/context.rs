@@ -1,5 +1,4 @@
 use crate::{Display, Object, Renderer};
-use ffi;
 use glib;
 use glib::translate::*;
 use std::{fmt, ptr};
@@ -22,7 +21,6 @@ impl Context {
     ///
     /// A newly allocated `Context`
     pub fn new(display: Option<&Display>) -> Result<Context, glib::Error> {
-        assert_initialized_main_thread!();
         unsafe {
             let mut error = ptr::null_mut();
             let ret = ffi::cogl_context_new(display.to_glib_none().0, &mut error);

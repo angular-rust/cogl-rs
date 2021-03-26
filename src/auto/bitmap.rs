@@ -1,5 +1,5 @@
-use crate::{Bool, Context, Object, PixelBuffer, PixelFormat};
-use ffi;
+use crate::{Context, Object, PixelBuffer, PixelFormat};
+
 use glib;
 use glib::translate::*;
 use std::{fmt, mem, ptr};
@@ -13,56 +13,53 @@ glib_wrapper! {
 }
 
 impl Bitmap {
-    //TODO:
-    // /// Creates a bitmap using some existing data. The data is not copied
-    // /// so the application must keep the buffer alive for the lifetime of
-    // /// the `Bitmap`. This can be used for example with
-    // /// `Framebuffer::read_pixels_into_bitmap` to read data directly
-    // /// into an application buffer with the specified rowstride.
-    // /// ## `context`
-    // /// A `Context`
-    // /// ## `width`
-    // /// The width of the bitmap.
-    // /// ## `height`
-    // /// The height of the bitmap.
-    // /// ## `format`
-    // /// The format of the pixel data.
-    // /// ## `rowstride`
-    // /// The rowstride of the bitmap (the number of bytes from
-    // ///  the start of one row of the bitmap to the next).
-    // /// ## `data`
-    // /// A pointer to the data. The bitmap will take ownership of this data.
-    // ///
-    // /// # Returns
-    // ///
-    // /// A new `Bitmap`.
-    // pub fn new_for_data(
-    //     context: &Context,
-    //     width: i32,
-    //     height: i32,
-    //     format: PixelFormat,
-    //     rowstride: i32,
-    //     data: u8,
-    // ) -> Bitmap {
-    //     // skip_assert_initialized!();
-    //     // unsafe {
-    //     //     from_glib_full(ffi::cogl_bitmap_new_for_data(
-    //     //         context.to_glib_none().0,
-    //     //         width,
-    //     //         height,
-    //     //         format.to_glib(),
-    //     //         rowstride,
-    //     //         data,
-    //     //     ))
-    //     // }
-    // }
+    /// Creates a bitmap using some existing data. The data is not copied
+    /// so the application must keep the buffer alive for the lifetime of
+    /// the `Bitmap`. This can be used for example with
+    /// `Framebuffer::read_pixels_into_bitmap` to read data directly
+    /// into an application buffer with the specified rowstride.
+    /// ## `context`
+    /// A `Context`
+    /// ## `width`
+    /// The width of the bitmap.
+    /// ## `height`
+    /// The height of the bitmap.
+    /// ## `format`
+    /// The format of the pixel data.
+    /// ## `rowstride`
+    /// The rowstride of the bitmap (the number of bytes from
+    ///  the start of one row of the bitmap to the next).
+    /// ## `data`
+    /// A pointer to the data. The bitmap will take ownership of this data.
+    ///
+    /// # Returns
+    ///
+    /// A new `Bitmap`.
+    pub fn new_for_data(
+        context: &Context,
+        width: i32,
+        height: i32,
+        format: PixelFormat,
+        rowstride: i32,
+        data: &[u8],
+    ) -> Bitmap {
+        unsafe {
+            from_glib_full(ffi::cogl_bitmap_new_for_data(
+                context.to_glib_none().0,
+                width,
+                height,
+                format.to_glib(),
+                rowstride,
+                data.to_glib_none().0,
+            ))
+        }
+    }
 
     //pub fn from_buffer(buffer: /*Unknown conversion*//*Unimplemented*/Buffer, format: PixelFormat, width: i32, height: i32, rowstride: i32, offset: i32) -> Bitmap {
     //    unsafe { TODO: call cogl_sys:cogl_bitmap_new_from_buffer() }
     //}
 
     pub fn from_file(filename: &str) -> Result<Bitmap, glib::Error> {
-        assert_initialized_main_thread!();
         unsafe {
             let mut error = ptr::null_mut();
             let ret = ffi::cogl_bitmap_new_from_file(filename.to_glib_none().0, &mut error);
@@ -75,7 +72,6 @@ impl Bitmap {
     }
 
     pub fn with_size(context: &Context, width: u32, height: u32, format: PixelFormat) -> Bitmap {
-        skip_assert_initialized!();
         unsafe {
             from_glib_full(ffi::cogl_bitmap_new_with_size(
                 context.to_glib_none().0,
@@ -143,8 +139,7 @@ impl Bitmap {
     /// # Returns
     ///
     /// `true` if the image was successfully parsed
-    pub fn get_size_from_file(filename: &str) -> (Bool, i32, i32) {
-        assert_initialized_main_thread!();
+    pub fn get_size_from_file(filename: &str) -> (bool, i32, i32) {
         unsafe {
             let mut width = mem::MaybeUninit::uninit();
             let mut height = mem::MaybeUninit::uninit();
@@ -155,7 +150,7 @@ impl Bitmap {
             );
             let width = width.assume_init();
             let height = height.assume_init();
-            (ret, width, height)
+            (ret == crate::TRUE, width, height)
         }
     }
 }

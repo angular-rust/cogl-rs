@@ -1,5 +1,5 @@
 use crate::{Object, SnippetHook};
-use ffi;
+
 use glib::translate::*;
 use glib::GString;
 use std::fmt;
@@ -28,7 +28,6 @@ impl Snippet {
     ///
     /// a pointer to a new `Snippet`
     pub fn new(hook: SnippetHook, declarations: &str, post: &str) -> Snippet {
-        assert_initialized_main_thread!();
         unsafe {
             from_glib_full(ffi::cogl_snippet_new(
                 hook.to_glib(),
@@ -44,11 +43,7 @@ impl Snippet {
     /// the source string that was set with
     ///  `Snippet::set_declarations` or `None` if none was set.
     pub fn get_declarations(&self) -> Option<GString> {
-        unsafe {
-            from_glib_none(ffi::cogl_snippet_get_declarations(
-                self.to_glib_none().0,
-            ))
-        }
+        unsafe { from_glib_none(ffi::cogl_snippet_get_declarations(self.to_glib_none().0)) }
     }
 
     ///

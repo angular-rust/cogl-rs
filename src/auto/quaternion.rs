@@ -1,10 +1,11 @@
 use crate::{Euler, Matrix};
-use ffi;
+
 use glib::translate::*;
+use std::boxed::Box as Box_;
 use std::mem;
 
 glib_wrapper! {
-    #[derive(Debug, Hash)] // PartialOrd, Ord,
+    #[derive(Debug, PartialOrd, Ord, Hash)]
     pub struct Quaternion(Boxed<ffi::CoglQuaternion>);
 
     match fn {
@@ -60,36 +61,34 @@ impl Quaternion {
         }
     }
 
-    //TODO:
-    // /// Initializes a quaternion that rotates `angle` degrees around the
-    // /// given `axis` vector. The axis vector does not need to be
-    // /// normalized.
-    // ///
-    // /// ## `angle`
-    // /// The angle to rotate around `axis3f`
-    // /// ## `axis3f`
-    // /// your 3 component axis vector about which you want to rotate.
-    // pub fn init_from_angle_vector(&mut self, angle: f32, axis3f: f32) {
-    //     // unsafe {
-    //     //     ffi::cogl_quaternion_init_from_angle_vector(
-    //     //         self.to_glib_none_mut().0,
-    //     //         angle,
-    //     //         axis3f,
-    //     //     );
-    //     // }
-    // }
+    /// Initializes a quaternion that rotates `angle` degrees around the
+    /// given `axis` vector. The axis vector does not need to be
+    /// normalized.
+    ///
+    /// ## `angle`
+    /// The angle to rotate around `axis3f`
+    /// ## `axis3f`
+    /// your 3 component axis vector about which you want to rotate.
+    pub fn init_from_angle_vector(&mut self, angle: f32, axis3f: &[f32; 3]) {
+        unsafe {
+            ffi::cogl_quaternion_init_from_angle_vector(
+                self.to_glib_none_mut().0,
+                angle,
+                axis3f.to_glib_none().0,
+            );
+        }
+    }
 
-    //TODO:
-    // /// Initializes a [w (x, y,z)] quaternion directly from an array of 4
-    // /// floats: [w,x,y,z].
-    // ///
-    // /// ## `array`
-    // /// An array of 4 floats w,(x,y,z)
-    // pub fn init_from_array(&mut self, array: f32) {
-    //     // unsafe {
-    //     //     ffi::cogl_quaternion_init_from_array(self.to_glib_none_mut().0, array);
-    //     // }
-    // }
+    /// Initializes a [w (x, y,z)] quaternion directly from an array of 4
+    /// floats: [w,x,y,z].
+    ///
+    /// ## `array`
+    /// An array of 4 floats w,(x,y,z)
+    pub fn init_from_array(&mut self, array: &[f32]) {
+        unsafe {
+            ffi::cogl_quaternion_init_from_array(self.to_glib_none_mut().0, array.as_ptr());
+        }
+    }
 
     ///
     /// ## `euler`
@@ -322,17 +321,18 @@ impl Quaternion {
         }
     }
 
-    //pub fn equal(v1: /*Unimplemented*/Option<Fundamental: Pointer>, v2: /*Unimplemented*/Option<Fundamental: Pointer>) -> Bool {
-    //    unsafe { TODO: call cogl_sys:cogl_quaternion_equal() }
-    //}
+    fn equal(v1: &Self, v2: &Self) -> bool {
+        let a = Box_::into_raw(Box::new(v1)) as *mut _;
+        let b = Box_::into_raw(Box::new(v2)) as *mut _;
+        unsafe { ffi::cogl_quaternion_equal(a, b) == crate::TRUE }
+    }
 }
 
-//TODO:
-// impl PartialEq for Quaternion {
-//     #[inline]
-//     fn eq(&self, other: &Self) -> bool {
-//         // self.equal(other)
-//     }
-// }
+impl PartialEq for Quaternion {
+    #[inline]
+    fn eq(&self, other: &Self) -> bool {
+        Quaternion::equal(self, other)
+    }
+}
 
-// impl Eq for Quaternion {}
+impl Eq for Quaternion {}

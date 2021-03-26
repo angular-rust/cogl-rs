@@ -1,5 +1,5 @@
 use crate::{Context, Object};
-use ffi;
+
 use glib::translate::*;
 use std::fmt;
 
@@ -25,13 +25,7 @@ impl IndexBuffer {
     ///
     /// A newly allocated `IndexBuffer`
     pub fn new(context: &Context, bytes: usize) -> IndexBuffer {
-        skip_assert_initialized!();
-        unsafe {
-            from_glib_full(ffi::cogl_index_buffer_new(
-                context.to_glib_none().0,
-                bytes,
-            ))
-        }
+        unsafe { from_glib_full(ffi::cogl_index_buffer_new(context.to_glib_none().0, bytes)) }
     }
 }
 

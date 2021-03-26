@@ -1,6 +1,5 @@
-// use crate::GLES2Vtable;
 use crate::{Context, Object};
-use ffi;
+
 use glib;
 use glib::translate::*;
 use std::{fmt, ptr};
@@ -41,7 +40,6 @@ impl GLES2Context {
     /// A newly allocated `GLES2Context` or `None` if there
     ///  was an error and `error` will be updated in that case.
     pub fn new(ctx: &Context) -> Result<GLES2Context, glib::Error> {
-        skip_assert_initialized!();
         unsafe {
             let mut error = ptr::null_mut();
             let ret = ffi::cogl_gles2_context_new(ctx.to_glib_none().0, &mut error);
@@ -53,7 +51,6 @@ impl GLES2Context {
         }
     }
 
-    //TODO:
     // /// Queries the OpenGLES 2.0 api function pointers that should be
     // /// used for rendering with the given `self`.
     // ///
@@ -66,11 +63,11 @@ impl GLES2Context {
     // /// A pointer to a `GLES2Vtable` providing pointers
     // ///  to functions for the full OpenGLES 2.0 api.
     // pub fn get_vtable(&self) -> Option<GLES2Vtable> {
-    //     // unsafe {
-    //     //     from_glib_none(ffi::cogl_gles2_context_get_vtable(
-    //     //         self.to_glib_none().0,
-    //     //     ))
-    //     // }
+    //     unsafe {
+    //         from_glib_none(ffi::cogl_gles2_context_get_vtable(
+    //             self.to_glib_none().0,
+    //         ))
+    //     }
     // }
 }
 

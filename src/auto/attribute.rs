@@ -1,5 +1,5 @@
-use crate::{AttributeBuffer, AttributeType, Bool, Context, Object};
-use ffi;
+use crate::{AttributeBuffer, AttributeType, Context, Object};
+
 use glib::translate::*;
 use std::fmt;
 
@@ -111,7 +111,6 @@ impl Attribute {
         components: i32,
         type_: AttributeType,
     ) -> Attribute {
-        skip_assert_initialized!();
         unsafe {
             from_glib_full(ffi::cogl_attribute_new(
                 attribute_buffer.to_glib_none().0,
@@ -146,7 +145,6 @@ impl Attribute {
     /// A newly allocated `Attribute`
     ///  representing the given constant `value`.
     pub fn new_const_1f(context: &Context, name: &str, value: f32) -> Attribute {
-        skip_assert_initialized!();
         unsafe {
             from_glib_full(ffi::cogl_attribute_new_const_1f(
                 context.to_glib_none().0,
@@ -186,7 +184,6 @@ impl Attribute {
         component0: f32,
         component1: f32,
     ) -> Attribute {
-        skip_assert_initialized!();
         unsafe {
             from_glib_full(ffi::cogl_attribute_new_const_2f(
                 context.to_glib_none().0,
@@ -197,87 +194,83 @@ impl Attribute {
         }
     }
 
-    // TODO:
-    // /// Creates a new, 2 component, attribute whose value remains
-    // /// constant across all the vertices of a primitive without needing to
-    // /// duplicate the value for each vertex.
-    // ///
-    // /// The constants (value[0], value[1]) represent a 2 component float
-    // /// vector which should have a corresponding declaration in GLSL code
-    // /// like:
-    // ///
-    // /// [|
-    // /// attribute vec2 name;
-    // /// |]
-    // /// ## `context`
-    // /// A `Context`
-    // /// ## `name`
-    // /// The name of the attribute (used to reference it from GLSL)
-    // /// ## `value`
-    // /// A pointer to a 2 component float vector
-    // ///
-    // /// # Returns
-    // ///
-    // /// A newly allocated `Attribute`
-    // ///  representing the given constant vector.
-    // pub fn new_const_2fv(context: &Context, name: &str, value: f32) -> Attribute {
-    //     // skip_assert_initialized!();
-    //     // unsafe {
-    //     //     from_glib_full(ffi::cogl_attribute_new_const_2fv(
-    //     //         context.to_glib_none().0,
-    //     //         name.to_glib_none().0,
-    //     //         value,
-    //     //     ))
-    //     // }
-    // }
+    /// Creates a new, 2 component, attribute whose value remains
+    /// constant across all the vertices of a primitive without needing to
+    /// duplicate the value for each vertex.
+    ///
+    /// The constants (value[0], value[1]) represent a 2 component float
+    /// vector which should have a corresponding declaration in GLSL code
+    /// like:
+    ///
+    /// [|
+    /// attribute vec2 name;
+    /// |]
+    /// ## `context`
+    /// A `Context`
+    /// ## `name`
+    /// The name of the attribute (used to reference it from GLSL)
+    /// ## `value`
+    /// A pointer to a 2 component float vector
+    ///
+    /// # Returns
+    ///
+    /// A newly allocated `Attribute`
+    ///  representing the given constant vector.
+    pub fn new_const_2fv(context: &Context, name: &str, value: &[f32; 2]) -> Attribute {
+        unsafe {
+            from_glib_full(ffi::cogl_attribute_new_const_2fv(
+                context.to_glib_none().0,
+                name.to_glib_none().0,
+                value.as_ptr(),
+            ))
+        }
+    }
 
-    //TODO:
-    // /// Creates a new matrix attribute whose value remains constant
-    // /// across all the vertices of a primitive without needing to duplicate
-    // /// the value for each vertex.
-    // ///
-    // /// `matrix2x2` represent a square 2 by 2 matrix specified in
-    // /// column-major order (each pair of consecutive numbers represents a
-    // /// column) which should have a corresponding declaration in GLSL code
-    // /// like:
-    // ///
-    // /// [|
-    // /// attribute mat2 name;
-    // /// |]
-    // ///
-    // /// If `transpose` is `true` then all matrix components are rotated
-    // /// around the diagonal of the matrix such that the first column
-    // /// becomes the first row and the second column becomes the second row.
-    // /// ## `context`
-    // /// A `Context`
-    // /// ## `name`
-    // /// The name of the attribute (used to reference it from GLSL)
-    // /// ## `matrix2x2`
-    // /// A pointer to a 2 by 2 matrix
-    // /// ## `transpose`
-    // /// Whether the matrix should be transposed on upload or
-    // ///  not
-    // ///
-    // /// # Returns
-    // ///
-    // /// A newly allocated `Attribute`
-    // ///  representing the given constant matrix.
-    // pub fn new_const_2x2fv(
-    //     context: &Context,
-    //     name: &str,
-    //     matrix2x2: f32,
-    //     transpose: Bool,
-    // ) -> Attribute {
-    //     // skip_assert_initialized!();
-    //     // unsafe {
-    //     //     from_glib_full(ffi::cogl_attribute_new_const_2x2fv(
-    //     //         context.to_glib_none().0,
-    //     //         name.to_glib_none().0,
-    //     //         matrix2x2,
-    //     //         transpose,
-    //     //     ))
-    //     // }
-    // }
+    /// Creates a new matrix attribute whose value remains constant
+    /// across all the vertices of a primitive without needing to duplicate
+    /// the value for each vertex.
+    ///
+    /// `matrix2x2` represent a square 2 by 2 matrix specified in
+    /// column-major order (each pair of consecutive numbers represents a
+    /// column) which should have a corresponding declaration in GLSL code
+    /// like:
+    ///
+    /// [|
+    /// attribute mat2 name;
+    /// |]
+    ///
+    /// If `transpose` is `true` then all matrix components are rotated
+    /// around the diagonal of the matrix such that the first column
+    /// becomes the first row and the second column becomes the second row.
+    /// ## `context`
+    /// A `Context`
+    /// ## `name`
+    /// The name of the attribute (used to reference it from GLSL)
+    /// ## `matrix2x2`
+    /// A pointer to a 2 by 2 matrix
+    /// ## `transpose`
+    /// Whether the matrix should be transposed on upload or
+    ///  not
+    ///
+    /// # Returns
+    ///
+    /// A newly allocated `Attribute`
+    ///  representing the given constant matrix.
+    pub fn new_const_2x2fv(
+        context: &Context,
+        name: &str,
+        matrix2x2: &[f32; 4],
+        transpose: bool,
+    ) -> Attribute {
+        unsafe {
+            from_glib_full(ffi::cogl_attribute_new_const_2x2fv(
+                context.to_glib_none().0,
+                name.to_glib_none().0,
+                matrix2x2.as_ptr(),
+                transpose as i32,
+            ))
+        }
+    }
 
     /// Creates a new, 3 component, attribute whose value remains
     /// constant across all the vertices of a primitive without needing to
@@ -315,7 +308,6 @@ impl Attribute {
         component1: f32,
         component2: f32,
     ) -> Attribute {
-        skip_assert_initialized!();
         unsafe {
             from_glib_full(ffi::cogl_attribute_new_const_3f(
                 context.to_glib_none().0,
@@ -327,91 +319,87 @@ impl Attribute {
         }
     }
 
-    //TODO:
-    // /// Creates a new, 3 component, attribute whose value remains
-    // /// constant across all the vertices of a primitive without needing to
-    // /// duplicate the value for each vertex.
-    // ///
-    // /// The constants (value[0], value[1], value[2]) represent a 3
-    // /// component float vector which should have a corresponding
-    // /// declaration in GLSL code like:
-    // ///
-    // /// [|
-    // /// attribute vec3 name;
-    // /// |]
-    // ///
-    // /// unless the built in name "cogl_normal_in" is being used where no
-    // /// explicit GLSL declaration need be made.
-    // /// ## `context`
-    // /// A `Context`
-    // /// ## `name`
-    // /// The name of the attribute (used to reference it from GLSL)
-    // /// ## `value`
-    // /// A pointer to a 3 component float vector
-    // ///
-    // /// # Returns
-    // ///
-    // /// A newly allocated `Attribute`
-    // ///  representing the given constant vector.
-    // pub fn new_const_3fv(context: &Context, name: &str, value: f32) -> Attribute {
-    //     // skip_assert_initialized!();
-    //     // unsafe {
-    //     //     from_glib_full(ffi::cogl_attribute_new_const_3fv(
-    //     //         context.to_glib_none().0,
-    //     //         name.to_glib_none().0,
-    //     //         value,
-    //     //     ))
-    //     // }
-    // }
+    /// Creates a new, 3 component, attribute whose value remains
+    /// constant across all the vertices of a primitive without needing to
+    /// duplicate the value for each vertex.
+    ///
+    /// The constants (value[0], value[1], value[2]) represent a 3
+    /// component float vector which should have a corresponding
+    /// declaration in GLSL code like:
+    ///
+    /// [|
+    /// attribute vec3 name;
+    /// |]
+    ///
+    /// unless the built in name "cogl_normal_in" is being used where no
+    /// explicit GLSL declaration need be made.
+    /// ## `context`
+    /// A `Context`
+    /// ## `name`
+    /// The name of the attribute (used to reference it from GLSL)
+    /// ## `value`
+    /// A pointer to a 3 component float vector
+    ///
+    /// # Returns
+    ///
+    /// A newly allocated `Attribute`
+    ///  representing the given constant vector.
+    pub fn new_const_3fv(context: &Context, name: &str, value: &[f32; 3]) -> Attribute {
+        unsafe {
+            from_glib_full(ffi::cogl_attribute_new_const_3fv(
+                context.to_glib_none().0,
+                name.to_glib_none().0,
+                value.as_ptr(),
+            ))
+        }
+    }
 
-    // TODO:
-    // /// Creates a new matrix attribute whose value remains constant
-    // /// across all the vertices of a primitive without needing to duplicate
-    // /// the value for each vertex.
-    // ///
-    // /// `matrix3x3` represent a square 3 by 3 matrix specified in
-    // /// column-major order (each triple of consecutive numbers represents a
-    // /// column) which should have a corresponding declaration in GLSL code
-    // /// like:
-    // ///
-    // /// [|
-    // /// attribute mat3 name;
-    // /// |]
-    // ///
-    // /// If `transpose` is `true` then all matrix components are rotated
-    // /// around the diagonal of the matrix such that the first column
-    // /// becomes the first row and the second column becomes the second row
-    // /// etc.
-    // /// ## `context`
-    // /// A `Context`
-    // /// ## `name`
-    // /// The name of the attribute (used to reference it from GLSL)
-    // /// ## `matrix3x3`
-    // /// A pointer to a 3 by 3 matrix
-    // /// ## `transpose`
-    // /// Whether the matrix should be transposed on upload or
-    // ///  not
-    // ///
-    // /// # Returns
-    // ///
-    // /// A newly allocated `Attribute`
-    // ///  representing the given constant matrix.
-    // pub fn new_const_3x3fv(
-    //     context: &Context,
-    //     name: &str,
-    //     matrix3x3: f32,
-    //     transpose: Bool,
-    // ) -> Attribute {
-    //     // skip_assert_initialized!();
-    //     // unsafe {
-    //     //     from_glib_full(ffi::cogl_attribute_new_const_3x3fv(
-    //     //         context.to_glib_none().0,
-    //     //         name.to_glib_none().0,
-    //     //         matrix3x3,
-    //     //         transpose,
-    //     //     ))
-    //     // }
-    // }
+    /// Creates a new matrix attribute whose value remains constant
+    /// across all the vertices of a primitive without needing to duplicate
+    /// the value for each vertex.
+    ///
+    /// `matrix3x3` represent a square 3 by 3 matrix specified in
+    /// column-major order (each triple of consecutive numbers represents a
+    /// column) which should have a corresponding declaration in GLSL code
+    /// like:
+    ///
+    /// [|
+    /// attribute mat3 name;
+    /// |]
+    ///
+    /// If `transpose` is `true` then all matrix components are rotated
+    /// around the diagonal of the matrix such that the first column
+    /// becomes the first row and the second column becomes the second row
+    /// etc.
+    /// ## `context`
+    /// A `Context`
+    /// ## `name`
+    /// The name of the attribute (used to reference it from GLSL)
+    /// ## `matrix3x3`
+    /// A pointer to a 3 by 3 matrix
+    /// ## `transpose`
+    /// Whether the matrix should be transposed on upload or
+    ///  not
+    ///
+    /// # Returns
+    ///
+    /// A newly allocated `Attribute`
+    ///  representing the given constant matrix.
+    pub fn new_const_3x3fv(
+        context: &Context,
+        name: &str,
+        matrix3x3: &[f32; 9],
+        transpose: bool,
+    ) -> Attribute {
+        unsafe {
+            from_glib_full(ffi::cogl_attribute_new_const_3x3fv(
+                context.to_glib_none().0,
+                name.to_glib_none().0,
+                matrix3x3.as_ptr(),
+                transpose as i32,
+            ))
+        }
+    }
 
     /// Creates a new, 4 component, attribute whose value remains
     /// constant across all the vertices of a primitive without needing to
@@ -453,7 +441,6 @@ impl Attribute {
         component2: f32,
         component3: f32,
     ) -> Attribute {
-        skip_assert_initialized!();
         unsafe {
             from_glib_full(ffi::cogl_attribute_new_const_4f(
                 context.to_glib_none().0,
@@ -466,92 +453,88 @@ impl Attribute {
         }
     }
 
-    // TODO:
-    // /// Creates a new, 4 component, attribute whose value remains
-    // /// constant across all the vertices of a primitive without needing to
-    // /// duplicate the value for each vertex.
-    // ///
-    // /// The constants (value[0], value[1], value[2], value[3]) represent a
-    // /// 4 component float vector which should have a corresponding
-    // /// declaration in GLSL code like:
-    // ///
-    // /// [|
-    // /// attribute vec4 name;
-    // /// |]
-    // ///
-    // /// unless one of the built in names "cogl_color_in",
-    // /// "cogl_tex_coord0_in or "cogl_tex_coord1_in" etc is being used where
-    // /// no explicit GLSL declaration need be made.
-    // /// ## `context`
-    // /// A `Context`
-    // /// ## `name`
-    // /// The name of the attribute (used to reference it from GLSL)
-    // /// ## `value`
-    // /// A pointer to a 4 component float vector
-    // ///
-    // /// # Returns
-    // ///
-    // /// A newly allocated `Attribute`
-    // ///  representing the given constant vector.
-    // pub fn new_const_4fv(context: &Context, name: &str, value: f32) -> Attribute {
-    //     // skip_assert_initialized!();
-    //     // unsafe {
-    //     //     from_glib_full(ffi::cogl_attribute_new_const_4fv(
-    //     //         context.to_glib_none().0,
-    //     //         name.to_glib_none().0,
-    //     //         value,
-    //     //     ))
-    //     // }
-    // }
+    /// Creates a new, 4 component, attribute whose value remains
+    /// constant across all the vertices of a primitive without needing to
+    /// duplicate the value for each vertex.
+    ///
+    /// The constants (value[0], value[1], value[2], value[3]) represent a
+    /// 4 component float vector which should have a corresponding
+    /// declaration in GLSL code like:
+    ///
+    /// [|
+    /// attribute vec4 name;
+    /// |]
+    ///
+    /// unless one of the built in names "cogl_color_in",
+    /// "cogl_tex_coord0_in or "cogl_tex_coord1_in" etc is being used where
+    /// no explicit GLSL declaration need be made.
+    /// ## `context`
+    /// A `Context`
+    /// ## `name`
+    /// The name of the attribute (used to reference it from GLSL)
+    /// ## `value`
+    /// A pointer to a 4 component float vector
+    ///
+    /// # Returns
+    ///
+    /// A newly allocated `Attribute`
+    ///  representing the given constant vector.
+    pub fn new_const_4fv(context: &Context, name: &str, value: &[f32; 4]) -> Attribute {
+        unsafe {
+            from_glib_full(ffi::cogl_attribute_new_const_4fv(
+                context.to_glib_none().0,
+                name.to_glib_none().0,
+                value.as_ptr(),
+            ))
+        }
+    }
 
-    // TODO:
-    // /// Creates a new matrix attribute whose value remains constant
-    // /// across all the vertices of a primitive without needing to duplicate
-    // /// the value for each vertex.
-    // ///
-    // /// `matrix4x4` represent a square 4 by 4 matrix specified in
-    // /// column-major order (each 4-tuple of consecutive numbers represents a
-    // /// column) which should have a corresponding declaration in GLSL code
-    // /// like:
-    // ///
-    // /// [|
-    // /// attribute mat4 name;
-    // /// |]
-    // ///
-    // /// If `transpose` is `true` then all matrix components are rotated
-    // /// around the diagonal of the matrix such that the first column
-    // /// becomes the first row and the second column becomes the second row
-    // /// etc.
-    // /// ## `context`
-    // /// A `Context`
-    // /// ## `name`
-    // /// The name of the attribute (used to reference it from GLSL)
-    // /// ## `matrix4x4`
-    // /// A pointer to a 4 by 4 matrix
-    // /// ## `transpose`
-    // /// Whether the matrix should be transposed on upload or
-    // ///  not
-    // ///
-    // /// # Returns
-    // ///
-    // /// A newly allocated `Attribute`
-    // ///  representing the given constant matrix.
-    // pub fn new_const_4x4fv(
-    //     context: &Context,
-    //     name: &str,
-    //     matrix4x4: f32,
-    //     transpose: Bool,
-    // ) -> Attribute {
-    //     // skip_assert_initialized!();
-    //     // unsafe {
-    //     //     from_glib_full(ffi::cogl_attribute_new_const_4x4fv(
-    //     //         context.to_glib_none().0,
-    //     //         name.to_glib_none().0,
-    //     //         matrix4x4,
-    //     //         transpose,
-    //     //     ))
-    //     // }
-    // }
+    /// Creates a new matrix attribute whose value remains constant
+    /// across all the vertices of a primitive without needing to duplicate
+    /// the value for each vertex.
+    ///
+    /// `matrix4x4` represent a square 4 by 4 matrix specified in
+    /// column-major order (each 4-tuple of consecutive numbers represents a
+    /// column) which should have a corresponding declaration in GLSL code
+    /// like:
+    ///
+    /// [|
+    /// attribute mat4 name;
+    /// |]
+    ///
+    /// If `transpose` is `true` then all matrix components are rotated
+    /// around the diagonal of the matrix such that the first column
+    /// becomes the first row and the second column becomes the second row
+    /// etc.
+    /// ## `context`
+    /// A `Context`
+    /// ## `name`
+    /// The name of the attribute (used to reference it from GLSL)
+    /// ## `matrix4x4`
+    /// A pointer to a 4 by 4 matrix
+    /// ## `transpose`
+    /// Whether the matrix should be transposed on upload or
+    ///  not
+    ///
+    /// # Returns
+    ///
+    /// A newly allocated `Attribute`
+    ///  representing the given constant matrix.
+    pub fn new_const_4x4fv(
+        context: &Context,
+        name: &str,
+        matrix4x4: &[f32; 16],
+        transpose: bool,
+    ) -> Attribute {
+        unsafe {
+            from_glib_full(ffi::cogl_attribute_new_const_4x4fv(
+                context.to_glib_none().0,
+                name.to_glib_none().0,
+                matrix4x4.as_ptr(),
+                transpose as i32,
+            ))
+        }
+    }
 
     ///
     /// # Returns
@@ -567,8 +550,8 @@ impl Attribute {
     ///
     /// the value of the normalized property set with
     /// `Attribute::set_normalized`.
-    pub fn get_normalized(&self) -> Bool {
-        unsafe { ffi::cogl_attribute_get_normalized(self.to_glib_none().0) }
+    pub fn get_normalized(&self) -> bool {
+        unsafe { ffi::cogl_attribute_get_normalized(self.to_glib_none().0) == crate::TRUE }
     }
 
     /// Sets a new `AttributeBuffer` for the attribute.
@@ -594,9 +577,9 @@ impl Attribute {
     /// will default to FALSE.
     /// ## `normalized`
     /// The new value for the normalized property.
-    pub fn set_normalized(&self, normalized: Bool) {
+    pub fn set_normalized(&self, normalized: bool) {
         unsafe {
-            ffi::cogl_attribute_set_normalized(self.to_glib_none().0, normalized);
+            ffi::cogl_attribute_set_normalized(self.to_glib_none().0, normalized as i32);
         }
     }
 }

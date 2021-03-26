@@ -1,5 +1,5 @@
-use crate::{Bool, Driver, Object, OnscreenTemplate, Output, RendererConstraint, WinsysID};
-use ffi;
+use crate::{Driver, Object, OnscreenTemplate, Output, RendererConstraint, WinsysID};
+
 use glib;
 use glib::translate::*;
 use std::{fmt, ptr};
@@ -50,7 +50,6 @@ impl Renderer {
     ///
     /// A newly created `Renderer`.
     pub fn new() -> Renderer {
-        assert_initialized_main_thread!();
         unsafe { from_glib_full(ffi::cogl_renderer_new()) }
     }
 
@@ -78,7 +77,7 @@ impl Renderer {
     pub fn check_onscreen_template(
         &self,
         onscreen_template: &OnscreenTemplate,
-    ) -> Result<Bool, glib::Error> {
+    ) -> Result<bool, glib::Error> {
         unsafe {
             let mut error = ptr::null_mut();
             let ret = ffi::cogl_renderer_check_onscreen_template(
@@ -87,7 +86,7 @@ impl Renderer {
                 &mut error,
             );
             if error.is_null() {
-                Ok(ret)
+                Ok(ret == crate::TRUE)
             } else {
                 Err(from_glib_full(error))
             }
@@ -103,12 +102,12 @@ impl Renderer {
     ///
     /// `true` if there was no error while connecting the
     ///  given `self`. `false` if there was an error.
-    pub fn connect(&self) -> Result<Bool, glib::Error> {
+    pub fn connect(&self) -> Result<bool, glib::Error> {
         unsafe {
             let mut error = ptr::null_mut();
             let ret = ffi::cogl_renderer_connect(self.to_glib_none().0, &mut error);
             if error.is_null() {
-                Ok(ret)
+                Ok(ret == crate::TRUE)
             } else {
                 Err(from_glib_full(error))
             }

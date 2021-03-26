@@ -1,9 +1,9 @@
-use ffi;
 use glib::translate::*;
+use std::boxed::Box as Box_;
 use std::mem;
 
 glib_wrapper! {
-    #[derive(Debug, Hash)] // PartialOrd, Ord,
+    #[derive(Debug, PartialOrd, Ord, Hash)]
     pub struct Color(Boxed<ffi::CoglColor>);
 
     match fn {
@@ -21,10 +21,7 @@ impl Color {
     /// a newly-allocated `Color`. Use `Color::free`
     ///  to free the allocated resources
     pub fn new() -> Color {
-        assert_initialized_main_thread!();
-        unsafe {
-            from_glib_full(ffi::cogl_color_new())
-        }
+        unsafe { from_glib_full(ffi::cogl_color_new()) }
     }
 
     /// Retrieves the alpha channel of `self` as a fixed point
@@ -34,9 +31,7 @@ impl Color {
     ///
     /// the alpha channel of the passed color
     pub fn get_alpha(&self) -> f32 {
-        unsafe {
-            ffi::cogl_color_get_alpha(self.to_glib_none().0)
-        }
+        unsafe { ffi::cogl_color_get_alpha(self.to_glib_none().0) }
     }
 
     /// Retrieves the alpha channel of `self` as a byte value
@@ -46,9 +41,7 @@ impl Color {
     ///
     /// the alpha channel of the passed color
     pub fn get_alpha_byte(&self) -> u8 {
-        unsafe {
-            ffi::cogl_color_get_alpha_byte(self.to_glib_none().0)
-        }
+        unsafe { ffi::cogl_color_get_alpha_byte(self.to_glib_none().0) }
     }
 
     /// Retrieves the alpha channel of `self` as a floating point
@@ -58,9 +51,7 @@ impl Color {
     ///
     /// the alpha channel of the passed color
     pub fn get_alpha_float(&self) -> f32 {
-        unsafe {
-            ffi::cogl_color_get_alpha_float(self.to_glib_none().0)
-        }
+        unsafe { ffi::cogl_color_get_alpha_float(self.to_glib_none().0) }
     }
 
     /// Retrieves the blue channel of `self` as a fixed point
@@ -70,9 +61,7 @@ impl Color {
     ///
     /// the blue channel of the passed color
     pub fn get_blue(&self) -> f32 {
-        unsafe {
-            ffi::cogl_color_get_blue(self.to_glib_none().0)
-        }
+        unsafe { ffi::cogl_color_get_blue(self.to_glib_none().0) }
     }
 
     /// Retrieves the blue channel of `self` as a byte value
@@ -82,9 +71,7 @@ impl Color {
     ///
     /// the blue channel of the passed color
     pub fn get_blue_byte(&self) -> u8 {
-        unsafe {
-            ffi::cogl_color_get_blue_byte(self.to_glib_none().0)
-        }
+        unsafe { ffi::cogl_color_get_blue_byte(self.to_glib_none().0) }
     }
 
     /// Retrieves the blue channel of `self` as a floating point
@@ -94,9 +81,7 @@ impl Color {
     ///
     /// the blue channel of the passed color
     pub fn get_blue_float(&self) -> f32 {
-        unsafe {
-            ffi::cogl_color_get_blue_float(self.to_glib_none().0)
-        }
+        unsafe { ffi::cogl_color_get_blue_float(self.to_glib_none().0) }
     }
 
     /// Retrieves the green channel of `self` as a fixed point
@@ -106,9 +91,7 @@ impl Color {
     ///
     /// the green channel of the passed color
     pub fn get_green(&self) -> f32 {
-        unsafe {
-            ffi::cogl_color_get_green(self.to_glib_none().0)
-        }
+        unsafe { ffi::cogl_color_get_green(self.to_glib_none().0) }
     }
 
     /// Retrieves the green channel of `self` as a byte value
@@ -118,9 +101,7 @@ impl Color {
     ///
     /// the green channel of the passed color
     pub fn get_green_byte(&self) -> u8 {
-        unsafe {
-            ffi::cogl_color_get_green_byte(self.to_glib_none().0)
-        }
+        unsafe { ffi::cogl_color_get_green_byte(self.to_glib_none().0) }
     }
 
     /// Retrieves the green channel of `self` as a floating point
@@ -130,9 +111,7 @@ impl Color {
     ///
     /// the green channel of the passed color
     pub fn get_green_float(&self) -> f32 {
-        unsafe {
-            ffi::cogl_color_get_green_float(self.to_glib_none().0)
-        }
+        unsafe { ffi::cogl_color_get_green_float(self.to_glib_none().0) }
     }
 
     /// Retrieves the red channel of `self` as a fixed point
@@ -142,9 +121,7 @@ impl Color {
     ///
     /// the red channel of the passed color
     pub fn get_red(&self) -> f32 {
-        unsafe {
-            ffi::cogl_color_get_red(self.to_glib_none().0)
-        }
+        unsafe { ffi::cogl_color_get_red(self.to_glib_none().0) }
     }
 
     /// Retrieves the red channel of `self` as a byte value
@@ -154,9 +131,7 @@ impl Color {
     ///
     /// the red channel of the passed color
     pub fn get_red_byte(&self) -> u8 {
-        unsafe {
-            ffi::cogl_color_get_red_byte(self.to_glib_none().0)
-        }
+        unsafe { ffi::cogl_color_get_red_byte(self.to_glib_none().0) }
     }
 
     /// Retrieves the red channel of `self` as a floating point
@@ -166,9 +141,7 @@ impl Color {
     ///
     /// the red channel of the passed color
     pub fn get_red_float(&self) -> f32 {
-        unsafe {
-            ffi::cogl_color_get_red_float(self.to_glib_none().0)
-        }
+        unsafe { ffi::cogl_color_get_red_float(self.to_glib_none().0) }
     }
 
     /// Sets the values of the passed channels into a `Color`
@@ -186,15 +159,14 @@ impl Color {
         }
     }
 
-    //TODO:
-    // /// Sets the values of the passed channels into a `Color`
-    // /// ## `color_array`
-    // /// a pointer to an array of 4 float color components
-    // pub fn init_from_4fv(&mut self, color_array: f32) {
-    //     // unsafe {
-    //     //     ffi::cogl_color_init_from_4fv(self.to_glib_none_mut().0, color_array);
-    //     // }
-    // }
+    /// Sets the values of the passed channels into a `Color`
+    /// ## `color_array`
+    /// a pointer to an array of 4 float color components
+    pub fn init_from_4fv(&mut self, color_array: &[f32]) {
+        unsafe {
+            ffi::cogl_color_init_from_4fv(self.to_glib_none_mut().0, color_array.as_ptr());
+        }
+    }
 
     /// Sets the values of the passed channels into a `Color`.
     /// ## `red`
@@ -343,7 +315,12 @@ impl Color {
             let mut hue = mem::MaybeUninit::uninit();
             let mut saturation = mem::MaybeUninit::uninit();
             let mut luminance = mem::MaybeUninit::uninit();
-            ffi::cogl_color_to_hsl(self.to_glib_none().0, hue.as_mut_ptr(), saturation.as_mut_ptr(), luminance.as_mut_ptr());
+            ffi::cogl_color_to_hsl(
+                self.to_glib_none().0,
+                hue.as_mut_ptr(),
+                saturation.as_mut_ptr(),
+                luminance.as_mut_ptr(),
+            );
             let hue = hue.assume_init();
             let saturation = saturation.assume_init();
             let luminance = luminance.assume_init();
@@ -360,29 +337,37 @@ impl Color {
         }
     }
 
-    //pub fn equal(v1: /*Unimplemented*/Option<Fundamental: Pointer>, v2: /*Unimplemented*/Option<Fundamental: Pointer>) -> Bool {
-    //    unsafe { TODO: call cogl_sys:cogl_color_equal() }
-    //}
+    fn equal(v1: &Self, v2: &Self) -> bool {
+        let a = Box_::into_raw(Box::new(v1)) as *mut _;
+        let b = Box_::into_raw(Box::new(v2)) as *mut _;
+        unsafe { ffi::cogl_color_equal(a, b) == crate::TRUE }
+    }
 
-    //TODO:
-    // /// Converts a color expressed in HLS (hue, luminance and saturation)
-    // /// values into a `Color`.
-    // /// ## `color`
-    // /// return location for a `Color`
-    // /// ## `hue`
-    // /// hue value, in the 0 .. 360 range
-    // /// ## `saturation`
-    // /// saturation value, in the 0 .. 1 range
-    // /// ## `luminance`
-    // /// luminance value, in the 0 .. 1 range
-    // pub fn init_from_hsl(hue: f32, saturation: f32, luminance: f32) -> Color {
-    //     // assert_initialized_main_thread!();
-    //     // unsafe {
-    //     //     let mut color = Color::uninitialized();
-    //     //     ffi::cogl_color_init_from_hsl(color.to_glib_none_mut().0, hue, saturation, luminance);
-    //     //     color
-    //     // }
-    // }
+    /// Converts a color expressed in HLS (hue, luminance and saturation)
+    /// values into a `Color`.
+    /// ## `color`
+    /// return location for a `Color`
+    /// ## `hue`
+    /// hue value, in the 0 .. 360 range
+    /// ## `saturation`
+    /// saturation value, in the 0 .. 1 range
+    /// ## `luminance`
+    /// luminance value, in the 0 .. 1 range
+    pub fn init_from_hsl(hue: f32, saturation: f32, luminance: f32) -> Color {
+        unsafe {
+            let mut color = Color::uninitialized();
+            ffi::cogl_color_init_from_hsl(color.to_glib_none_mut().0, hue, saturation, luminance);
+            color
+        }
+    }
+}
+
+#[doc(hidden)]
+impl Uninitialized for Color {
+    #[inline]
+    unsafe fn uninitialized() -> Self {
+        mem::zeroed()
+    }
 }
 
 impl Default for Color {
@@ -391,12 +376,11 @@ impl Default for Color {
     }
 }
 
-//TODO:
-// impl PartialEq for Color {
-//     #[inline]
-//     fn eq(&self, other: &Self) -> bool {
-//         // self.equal(other)
-//     }
-// }
+impl PartialEq for Color {
+    #[inline]
+    fn eq(&self, other: &Self) -> bool {
+        Color::equal(self, other)
+    }
+}
 
-// impl Eq for Color {}
+impl Eq for Color {}

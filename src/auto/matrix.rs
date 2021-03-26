@@ -1,9 +1,11 @@
-use crate::{Bool, Euler, Quaternion};
-use ffi;
+use crate::{Euler, Quaternion};
+
 use glib::translate::*;
+use std::boxed::Box as Box_;
+use std::mem;
 
 glib_wrapper! {
-    #[derive(Debug, Hash)] // PartialOrd, Ord,
+    #[derive(Debug, PartialOrd, Ord, Hash)]
     pub struct Matrix(Boxed<ffi::CoglMatrix>);
 
     match fn {
@@ -59,47 +61,43 @@ impl Matrix {
     // /// # Returns
     // ///
     // /// a pointer to the float array
-    // pub fn get_array(&self) -> f32 {
-    //     // unsafe { ffi::cogl_matrix_get_array(self.to_glib_none().0) }
+    // pub fn get_array(&self) -> &[f32] {
+    //     unsafe { ffi::cogl_matrix_get_array(self.to_glib_none().0) };
     // }
 
-    //TODO:
-    // /// Gets the inverse transform of a given matrix and uses it to initialize
-    // /// a new `Matrix`.
-    // ///
-    // /// `<note>`Although the first parameter is annotated as const to indicate
-    // /// that the transform it represents isn't modified this function may
-    // /// technically save a copy of the inverse transform within the given
-    // /// `Matrix` so that subsequent requests for the inverse transform may
-    // /// avoid costly inversion calculations.`</note>`
-    // /// ## `inverse`
-    // /// The destination for a 4x4 inverse transformation matrix
-    // ///
-    // /// # Returns
-    // ///
-    // /// `true` if the inverse was successfully calculated or `false`
-    // ///  for degenerate transformations that can't be inverted (in this case the
-    // ///  `inverse` matrix will simply be initialized with the identity matrix)
-    // pub fn get_inverse(&self) -> (Bool, Matrix) {
-    //     // unsafe {
-    //     //     let mut inverse = Matrix::uninitialized();
-    //     //     let ret = ffi::cogl_matrix_get_inverse(
-    //     //         self.to_glib_none().0,
-    //     //         inverse.to_glib_none_mut().0,
-    //     //     );
-    //     //     (ret, inverse)
-    //     // }
-    // }
+    /// Gets the inverse transform of a given matrix and uses it to initialize
+    /// a new `Matrix`.
+    ///
+    /// `<note>`Although the first parameter is annotated as const to indicate
+    /// that the transform it represents isn't modified this function may
+    /// technically save a copy of the inverse transform within the given
+    /// `Matrix` so that subsequent requests for the inverse transform may
+    /// avoid costly inversion calculations.`</note>`
+    /// ## `inverse`
+    /// The destination for a 4x4 inverse transformation matrix
+    ///
+    /// # Returns
+    ///
+    /// `true` if the inverse was successfully calculated or `false`
+    ///  for degenerate transformations that can't be inverted (in this case the
+    ///  `inverse` matrix will simply be initialized with the identity matrix)
+    pub fn get_inverse(&self) -> (bool, Matrix) {
+        unsafe {
+            let mut inverse = Matrix::uninitialized();
+            let ret =
+                ffi::cogl_matrix_get_inverse(self.to_glib_none().0, inverse.to_glib_none_mut().0);
+            (ret == crate::TRUE, inverse)
+        }
+    }
 
-    //TODO:
-    // /// Initializes `self` with the contents of `array`
-    // /// ## `array`
-    // /// A linear array of 16 floats (column-major order)
-    // pub fn init_from_array(&mut self, array: f32) {
-    //     // unsafe {
-    //     //     ffi::cogl_matrix_init_from_array(self.to_glib_none_mut().0, array);
-    //     // }
-    // }
+    /// Initializes `self` with the contents of `array`
+    /// ## `array`
+    /// A linear array of 16 floats (column-major order)
+    pub fn init_from_array(&mut self, array: &[f32]) {
+        unsafe {
+            ffi::cogl_matrix_init_from_array(self.to_glib_none_mut().0, array.as_ptr());
+        }
+    }
 
     /// Initializes `self` from a `Euler` rotation.
     ///
@@ -165,8 +163,8 @@ impl Matrix {
     /// # Returns
     ///
     /// `true` if `self` is an identity matrix else `false`
-    pub fn is_identity(&self) -> Bool {
-        unsafe { ffi::cogl_matrix_is_identity(self.to_glib_none().0) }
+    pub fn is_identity(&self) -> bool {
+        unsafe { ffi::cogl_matrix_is_identity(self.to_glib_none().0) == crate::TRUE }
     }
 
     /// Applies a view transform `self` that positions the camera at
@@ -510,17 +508,26 @@ impl Matrix {
         }
     }
 
-    //pub fn equal(v1: /*Unimplemented*/Option<Fundamental: Pointer>, v2: /*Unimplemented*/Option<Fundamental: Pointer>) -> Bool {
-    //    unsafe { TODO: call cogl_sys:cogl_matrix_equal() }
-    //}
+    fn equal(v1: &Self, v2: &Self) -> bool {
+        let a = Box_::into_raw(Box::new(v1)) as *mut _;
+        let b = Box_::into_raw(Box::new(v2)) as *mut _;
+        unsafe { ffi::cogl_matrix_equal(a, b) == crate::TRUE }
+    }
 }
 
-//TODO:
-// impl PartialEq for Matrix {
-//     #[inline]
-//     fn eq(&self, other: &Self) -> bool {
-//         // self.equal(other)
-//     }
-// }
+#[doc(hidden)]
+impl Uninitialized for Matrix {
+    #[inline]
+    unsafe fn uninitialized() -> Self {
+        mem::zeroed()
+    }
+}
 
-// impl Eq for Matrix {}
+impl PartialEq for Matrix {
+    #[inline]
+    fn eq(&self, other: &Self) -> bool {
+        Matrix::equal(self, other)
+    }
+}
+
+impl Eq for Matrix {}

@@ -1,5 +1,5 @@
 use crate::{Bitmap, Context, Object, PixelFormat, Texture};
-use ffi;
+
 use glib;
 use glib::translate::*;
 use std::{fmt, ptr};
@@ -46,7 +46,6 @@ impl Texture2D {
         height: i32,
         format: PixelFormat,
     ) -> Texture2D {
-        skip_assert_initialized!();
         unsafe {
             from_glib_full(ffi::cogl_texture_2d_gl_new_from_foreign(
                 ctx.to_glib_none().0,
@@ -59,7 +58,6 @@ impl Texture2D {
     }
 
     pub fn from_bitmap(bitmap: &Bitmap) -> Texture2D {
-        skip_assert_initialized!();
         unsafe {
             from_glib_full(ffi::cogl_texture_2d_new_from_bitmap(
                 bitmap.to_glib_none().0,
@@ -67,37 +65,34 @@ impl Texture2D {
         }
     }
 
-    //TODO:
-    // pub fn from_data(
-    //     ctx: &Context,
-    //     width: i32,
-    //     height: i32,
-    //     format: PixelFormat,
-    //     rowstride: i32,
-    //     data: u8,
-    // ) -> Result<Texture2D, glib::Error> {
-    //     // skip_assert_initialized!();
-    //     // unsafe {
-    //     //     let mut error = ptr::null_mut();
-    //     //     let ret = ffi::cogl_texture_2d_new_from_data(
-    //     //         ctx.to_glib_none().0,
-    //     //         width,
-    //     //         height,
-    //     //         format.to_glib(),
-    //     //         rowstride,
-    //     //         data,
-    //     //         &mut error,
-    //     //     );
-    //     //     if error.is_null() {
-    //     //         Ok(from_glib_full(ret))
-    //     //     } else {
-    //     //         Err(from_glib_full(error))
-    //     //     }
-    //     // }
-    // }
+    pub fn from_data(
+        ctx: &Context,
+        width: i32,
+        height: i32,
+        format: PixelFormat,
+        rowstride: i32,
+        data: &[u8],
+    ) -> Result<Texture2D, glib::Error> {
+        unsafe {
+            let mut error = ptr::null_mut();
+            let ret = ffi::cogl_texture_2d_new_from_data(
+                ctx.to_glib_none().0,
+                width,
+                height,
+                format.to_glib(),
+                rowstride,
+                data.as_ptr(),
+                &mut error,
+            );
+            if error.is_null() {
+                Ok(from_glib_full(ret))
+            } else {
+                Err(from_glib_full(error))
+            }
+        }
+    }
 
     pub fn from_file(ctx: &Context, filename: &str) -> Result<Texture2D, glib::Error> {
-        skip_assert_initialized!();
         unsafe {
             let mut error = ptr::null_mut();
             let ret = ffi::cogl_texture_2d_new_from_file(
@@ -114,7 +109,6 @@ impl Texture2D {
     }
 
     pub fn with_size(ctx: &Context, width: i32, height: i32) -> Texture2D {
-        skip_assert_initialized!();
         unsafe {
             from_glib_full(ffi::cogl_texture_2d_new_with_size(
                 ctx.to_glib_none().0,

@@ -1,10 +1,11 @@
-use ffi;
-use glib::translate::*;
 use crate::Matrix;
 use crate::Quaternion;
 
+use glib::translate::*;
+use std::boxed::Box as Box_;
+
 glib_wrapper! {
-    #[derive(Debug, Hash)] // PartialOrd, Ord,
+    #[derive(Debug, PartialOrd, Ord, Hash)]
     pub struct Euler(Boxed<ffi::CoglEuler>);
 
     match fn {
@@ -50,21 +51,25 @@ impl Euler {
     /// A `Euler` with the rotation to initialize with
     pub fn init_from_quaternion(&mut self, quaternion: &Quaternion) {
         unsafe {
-            ffi::cogl_euler_init_from_quaternion(self.to_glib_none_mut().0, quaternion.to_glib_none().0);
+            ffi::cogl_euler_init_from_quaternion(
+                self.to_glib_none_mut().0,
+                quaternion.to_glib_none().0,
+            );
         }
     }
 
-    //pub fn equal(v1: /*Unimplemented*/Option<Fundamental: Pointer>, v2: /*Unimplemented*/Option<Fundamental: Pointer>) -> Bool {
-    //    unsafe { TODO: call cogl_sys:cogl_euler_equal() }
-    //}
+    fn equal(v1: &Self, v2: &Self) -> bool {
+        let a = Box_::into_raw(Box::new(v1)) as *mut _;
+        let b = Box_::into_raw(Box::new(v2)) as *mut _;
+        unsafe { ffi::cogl_euler_equal(a, b) == crate::TRUE }
+    }
 }
 
-//TODO:
-// impl PartialEq for Euler {
-//     #[inline]
-//     fn eq(&self, other: &Self) -> bool {
-//         // self.equal(other)
-//     }
-// }
+impl PartialEq for Euler {
+    #[inline]
+    fn eq(&self, other: &Self) -> bool {
+        Euler::equal(self, other)
+    }
+}
 
-// impl Eq for Euler {}
+impl Eq for Euler {}

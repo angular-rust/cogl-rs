@@ -1,5 +1,5 @@
-use crate::{Bool, Context, Euler, Matrix, MatrixEntry, Object, Quaternion};
-use ffi;
+use crate::{Context, Euler, Matrix, MatrixEntry, Object, Quaternion};
+
 use glib::translate::*;
 use std::fmt;
 
@@ -40,7 +40,6 @@ impl MatrixStack {
     ///
     /// A newly allocated `MatrixStack`
     pub fn new(ctx: &Context) -> MatrixStack {
-        skip_assert_initialized!();
         unsafe { from_glib_full(ffi::cogl_matrix_stack_new(ctx.to_glib_none().0)) }
     }
 
@@ -77,41 +76,40 @@ impl MatrixStack {
         }
     }
 
-    //TODO:
-    // /// Resolves the current `self` transform into a `Matrix` by
-    // /// combining the operations that have been applied to build up the
-    // /// current transform.
-    // ///
-    // /// There are two possible ways that this function may return its
-    // /// result depending on whether the stack is able to directly point
-    // /// to an internal `Matrix` or whether the result needs to be
-    // /// composed of multiple operations.
-    // ///
-    // /// If an internal matrix contains the required result then this
-    // /// function will directly return a pointer to that matrix, otherwise
-    // /// if the function returns `None` then `matrix` will be initialized
-    // /// to match the current transform of `self`.
-    // ///
-    // /// `<note>``matrix` will be left untouched if a direct pointer is
-    // /// returned.`</note>`
-    // /// ## `matrix`
-    // /// The potential destination for the current matrix
-    // ///
-    // /// # Returns
-    // ///
-    // /// A direct pointer to the current transform or `None`
-    // ///  and in that case `matrix` will be initialized with
-    // ///  the value of the current transform.
-    // pub fn get(&self) -> (Matrix, Matrix) {
-    //     // unsafe {
-    //     //     let mut matrix = Matrix::uninitialized();
-    //     //     let ret = from_glib_full(ffi::cogl_matrix_stack_get(
-    //     //         self.to_glib_none().0,
-    //     //         matrix.to_glib_none_mut().0,
-    //     //     ));
-    //     //     (ret, matrix)
-    //     // }
-    // }
+    /// Resolves the current `self` transform into a `Matrix` by
+    /// combining the operations that have been applied to build up the
+    /// current transform.
+    ///
+    /// There are two possible ways that this function may return its
+    /// result depending on whether the stack is able to directly point
+    /// to an internal `Matrix` or whether the result needs to be
+    /// composed of multiple operations.
+    ///
+    /// If an internal matrix contains the required result then this
+    /// function will directly return a pointer to that matrix, otherwise
+    /// if the function returns `None` then `matrix` will be initialized
+    /// to match the current transform of `self`.
+    ///
+    /// `<note>``matrix` will be left untouched if a direct pointer is
+    /// returned.`</note>`
+    /// ## `matrix`
+    /// The potential destination for the current matrix
+    ///
+    /// # Returns
+    ///
+    /// A direct pointer to the current transform or `None`
+    ///  and in that case `matrix` will be initialized with
+    ///  the value of the current transform.
+    pub fn get(&self) -> (Matrix, Matrix) {
+        unsafe {
+            let mut matrix = Matrix::uninitialized();
+            let ret = from_glib_full(ffi::cogl_matrix_stack_get(
+                self.to_glib_none().0,
+                matrix.to_glib_none_mut().0,
+            ));
+            (ret, matrix)
+        }
+    }
 
     /// Gets a reference to the current transform represented by a
     /// `MatrixEntry` pointer.
@@ -132,27 +130,26 @@ impl MatrixStack {
         unsafe { from_glib_none(ffi::cogl_matrix_stack_get_entry(self.to_glib_none().0)) }
     }
 
-    //TODO:
-    // /// Gets the inverse transform of the current matrix and uses it to
-    // /// initialize a new `Matrix`.
-    // /// ## `inverse`
-    // /// The destination for a 4x4 inverse transformation matrix
-    // ///
-    // /// # Returns
-    // ///
-    // /// `true` if the inverse was successfully calculated or `false`
-    // ///  for degenerate transformations that can't be inverted (in this case the
-    // ///  `inverse` matrix will simply be initialized with the identity matrix)
-    // pub fn get_inverse(&self) -> (Bool, Matrix) {
-    //     // unsafe {
-    //     //     let mut inverse = Matrix::uninitialized();
-    //     //     let ret = ffi::cogl_matrix_stack_get_inverse(
-    //     //         self.to_glib_none().0,
-    //     //         inverse.to_glib_none_mut().0,
-    //     //     );
-    //     //     (ret, inverse)
-    //     // }
-    // }
+    /// Gets the inverse transform of the current matrix and uses it to
+    /// initialize a new `Matrix`.
+    /// ## `inverse`
+    /// The destination for a 4x4 inverse transformation matrix
+    ///
+    /// # Returns
+    ///
+    /// `true` if the inverse was successfully calculated or `false`
+    ///  for degenerate transformations that can't be inverted (in this case the
+    ///  `inverse` matrix will simply be initialized with the identity matrix)
+    pub fn get_inverse(&self) -> (bool, Matrix) {
+        unsafe {
+            let mut inverse = Matrix::uninitialized();
+            let ret = ffi::cogl_matrix_stack_get_inverse(
+                self.to_glib_none().0,
+                inverse.to_glib_none_mut().0,
+            );
+            (ret == crate::TRUE, inverse)
+        }
+    }
 
     /// Resets the current matrix to the identity matrix.
     pub fn load_identity(&self) {

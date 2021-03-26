@@ -1,14 +1,10 @@
-use crate::Euler;
 use crate::{
-    Bitmap, Bool, Color, ColorMask, Context, Matrix, Object, Pipeline, PixelFormat, Primitive,
-    ReadPixelsFlags, StereoMode, Texture,
+    Bitmap, Color, ColorMask, Context, Euler, Fence, FenceClosure, Matrix, Object, Pipeline,
+    PixelFormat, Primitive, ReadPixelsFlags, StereoMode, Texture,
 };
 
-// use crate::Fence;
-// use crate::FenceClosure;
-
 use crate::Quaternion;
-use ffi;
+
 use glib;
 use glib::object::IsA;
 use glib::translate::*;
@@ -26,7 +22,6 @@ glib_wrapper! {
 
 impl Framebuffer {
     pub fn error_quark() -> u32 {
-        assert_initialized_main_thread!();
         unsafe { ffi::cogl_framebuffer_error_quark() }
     }
 }
@@ -39,20 +34,20 @@ pub const NONE_FRAMEBUFFER: Option<&Framebuffer> = None;
 ///
 /// [`Framebuffer`](struct.Framebuffer.html), [`Onscreen`](struct.Onscreen.html)
 pub trait FramebufferExt: 'static {
-    // /// Calls the provided callback when all previously-submitted commands have
-    // /// been executed by the GPU.
-    // ///
-    // /// Returns non-NULL if the fence succeeded, or `None` if it was unable to
-    // /// be inserted and the callback will never be called. The user does not
-    // /// need to free the closure; it will be freed automatically when the
-    // /// callback is called, or cancelled.
-    // ///
-    // /// ## `callback`
-    // /// A `CoglFenceCallback` to be called when
-    // ///  all commands submitted to Cogl have been executed
-    // /// ## `user_data`
-    // /// Private data that will be passed to the callback
-    // fn add_fence_callback<P: Fn(&Fence) + 'static>(&self, callback: P) -> Option<FenceClosure>;
+    /// Calls the provided callback when all previously-submitted commands have
+    /// been executed by the GPU.
+    ///
+    /// Returns non-NULL if the fence succeeded, or `None` if it was unable to
+    /// be inserted and the callback will never be called. The user does not
+    /// need to free the closure; it will be freed automatically when the
+    /// callback is called, or cancelled.
+    ///
+    /// ## `callback`
+    /// A `CoglFenceCallback` to be called when
+    ///  all commands submitted to Cogl have been executed
+    /// ## `user_data`
+    /// Private data that will be passed to the callback
+    fn add_fence_callback<P: Fn(&Fence) + 'static>(&self, callback: P) -> Option<FenceClosure>;
 
     /// Explicitly allocates a configured `Framebuffer` allowing developers to
     /// check and handle any errors that might arise from an unsupported
@@ -68,16 +63,16 @@ pub trait FramebufferExt: 'static {
     /// # Returns
     ///
     /// `true` if there were no error allocating the framebuffer, else `false`.
-    fn allocate(&self) -> Result<Bool, glib::Error>;
+    fn allocate(&self) -> Result<bool, glib::Error>;
 
-    // /// Removes a fence previously submitted with
-    // /// `Framebuffer::add_fence_callback`; the callback will not be
-    // /// called.
-    // ///
-    // /// ## `closure`
-    // /// The `FenceClosure` returned from
-    // ///  `Framebuffer::add_fence_callback`
-    // fn cancel_fence_callback(&self, closure: &mut FenceClosure);
+    /// Removes a fence previously submitted with
+    /// `Framebuffer::add_fence_callback`; the callback will not be
+    /// called.
+    ///
+    /// ## `closure`
+    /// The `FenceClosure` returned from
+    ///  `Framebuffer::add_fence_callback`
+    fn cancel_fence_callback(&self, closure: &mut FenceClosure);
 
     /// Clears all the auxiliary buffers identified in the `buffers` mask, and if
     /// that includes the color buffer then the specified `color` is used.
@@ -386,7 +381,7 @@ pub trait FramebufferExt: 'static {
     ///
     /// `true` if a depth texture has been enabled, else
     ///  `false`.
-    fn get_depth_texture_enabled(&self) -> Bool;
+    fn get_depth_texture_enabled(&self) -> bool;
 
     /// Queries whether depth buffer writing is enabled for `self`. This
     /// can be controlled via `Framebuffer::set_depth_write_enabled`.
@@ -394,7 +389,7 @@ pub trait FramebufferExt: 'static {
     /// # Returns
     ///
     /// `true` if depth writing is enabled or `false` if not.
-    fn get_depth_write_enabled(&self) -> Bool;
+    fn get_depth_write_enabled(&self) -> bool;
 
     /// Returns whether dithering has been requested for the given `self`.
     /// See `Framebuffer::set_dither_enabled` for more details about dithering.
@@ -406,7 +401,7 @@ pub trait FramebufferExt: 'static {
     /// # Returns
     ///
     /// `true` if dithering has been requested or `false` if not.
-    fn get_dither_enabled(&self) -> Bool;
+    fn get_dither_enabled(&self) -> bool;
 
     /// Retrieves the number of green bits of `self`
     ///
@@ -422,19 +417,17 @@ pub trait FramebufferExt: 'static {
     /// The height of `self`.
     fn get_height(&self) -> i32;
 
-    fn get_is_stereo(&self) -> Bool;
+    fn get_is_stereo(&self) -> bool;
 
-    //TODO:
-    // /// Stores the current model-view matrix in `matrix`.
-    // /// ## `matrix`
-    // /// return location for the model-view matrix
-    // fn get_modelview_matrix(&self) -> Matrix;
+    /// Stores the current model-view matrix in `matrix`.
+    /// ## `matrix`
+    /// return location for the model-view matrix
+    fn get_modelview_matrix(&self) -> Matrix;
 
-    //TODO:
-    // /// Stores the current projection matrix in `matrix`.
-    // /// ## `matrix`
-    // /// return location for the projection matrix
-    // fn get_projection_matrix(&self) -> Matrix;
+    /// Stores the current projection matrix in `matrix`.
+    /// ## `matrix`
+    /// return location for the projection matrix
+    fn get_projection_matrix(&self) -> Matrix;
 
     /// Retrieves the number of red bits of `self`
     ///
@@ -636,57 +629,56 @@ pub trait FramebufferExt: 'static {
     /// height of the clip rectangle
     fn push_scissor_clip(&self, x: i32, y: i32, width: i32, height: i32);
 
-    //TODO:
-    // /// This is a convenience wrapper around
-    // /// `Framebuffer::read_pixels_into_bitmap` which allocates a
-    // /// temporary `Bitmap` to read pixel data directly into the given
-    // /// buffer. The rowstride of the buffer is assumed to be the width of
-    // /// the region times the bytes per pixel of the format. The source for
-    // /// the data is always taken from the color buffer. If you want to use
-    // /// any other rowstride or source, please use the
-    // /// `Framebuffer::read_pixels_into_bitmap` function directly.
-    // ///
-    // /// The implementation of the function looks like this:
-    // ///
-    // ///
-    // /// ```text
-    // /// bitmap = cogl_bitmap_new_for_data (context,
-    // ///                                    width, height,
-    // ///                                    format,
-    // ///                                    /<!-- -->* rowstride *<!-- -->/
-    // ///                                    bpp * width,
-    // ///                                    pixels);
-    // /// cogl_framebuffer_read_pixels_into_bitmap (framebuffer,
-    // ///                                           x, y,
-    // ///                                           COGL_READ_PIXELS_COLOR_BUFFER,
-    // ///                                           bitmap);
-    // /// cogl_object_unref (bitmap);
-    // /// ```
-    // /// ## `x`
-    // /// The x position to read from
-    // /// ## `y`
-    // /// The y position to read from
-    // /// ## `width`
-    // /// The width of the region of rectangles to read
-    // /// ## `height`
-    // /// The height of the region of rectangles to read
-    // /// ## `format`
-    // /// The pixel format to store the data in
-    // /// ## `pixels`
-    // /// The address of the buffer to store the data in
-    // ///
-    // /// # Returns
-    // ///
-    // /// `true` if the read succeeded or `false` otherwise.
-    // fn read_pixels(
-    //     &self,
-    //     x: i32,
-    //     y: i32,
-    //     width: i32,
-    //     height: i32,
-    //     format: PixelFormat,
-    //     pixels: u8,
-    // ) -> Bool;
+    /// This is a convenience wrapper around
+    /// `Framebuffer::read_pixels_into_bitmap` which allocates a
+    /// temporary `Bitmap` to read pixel data directly into the given
+    /// buffer. The rowstride of the buffer is assumed to be the width of
+    /// the region times the bytes per pixel of the format. The source for
+    /// the data is always taken from the color buffer. If you want to use
+    /// any other rowstride or source, please use the
+    /// `Framebuffer::read_pixels_into_bitmap` function directly.
+    ///
+    /// The implementation of the function looks like this:
+    ///
+    ///
+    /// ```text
+    /// bitmap = cogl_bitmap_new_for_data (context,
+    ///                                    width, height,
+    ///                                    format,
+    ///                                    /<!-- -->* rowstride *<!-- -->/
+    ///                                    bpp * width,
+    ///                                    pixels);
+    /// cogl_framebuffer_read_pixels_into_bitmap (framebuffer,
+    ///                                           x, y,
+    ///                                           COGL_READ_PIXELS_COLOR_BUFFER,
+    ///                                           bitmap);
+    /// cogl_object_unref (bitmap);
+    /// ```
+    /// ## `x`
+    /// The x position to read from
+    /// ## `y`
+    /// The y position to read from
+    /// ## `width`
+    /// The width of the region of rectangles to read
+    /// ## `height`
+    /// The height of the region of rectangles to read
+    /// ## `format`
+    /// The pixel format to store the data in
+    /// ## `pixels`
+    /// The address of the buffer to store the data in
+    ///
+    /// # Returns
+    ///
+    /// `true` if the read succeeded or `false` otherwise.
+    fn read_pixels(
+        &self,
+        x: i32,
+        y: i32,
+        width: i32,
+        height: i32,
+        format: PixelFormat,
+        pixels: &[u8],
+    ) -> bool;
 
     /// This reads a rectangle of pixels from the given framebuffer where
     /// position (0, 0) is the top left. The pixel at (x, y) is the first
@@ -719,7 +711,7 @@ pub trait FramebufferExt: 'static {
         y: i32,
         source: ReadPixelsFlags,
         bitmap: &Bitmap,
-    ) -> Bool;
+    ) -> bool;
 
     /// When point sample rendering (also known as multisample rendering)
     /// has been enabled via `Framebuffer::set_samples_per_pixel`
@@ -833,7 +825,7 @@ pub trait FramebufferExt: 'static {
     /// `</note>`
     /// ## `enabled`
     /// TRUE or FALSE
-    fn set_depth_texture_enabled(&self, enabled: Bool);
+    fn set_depth_texture_enabled(&self, enabled: bool);
 
     /// Enables or disables depth buffer writing when rendering to `self`.
     /// If depth writing is enabled for both the framebuffer and the rendering
@@ -843,7 +835,7 @@ pub trait FramebufferExt: 'static {
     /// Depth buffer writing is enabled by default.
     /// ## `depth_write_enabled`
     /// `true` to enable depth writing or `false` to disable
-    fn set_depth_write_enabled(&self, depth_write_enabled: Bool);
+    fn set_depth_write_enabled(&self, depth_write_enabled: bool);
 
     /// Enables or disabled dithering if supported by the hardware.
     ///
@@ -860,7 +852,7 @@ pub trait FramebufferExt: 'static {
     /// Dithering is enabled by default.
     /// ## `dither_enabled`
     /// `true` to enable dithering or `false` to disable
-    fn set_dither_enabled(&self, dither_enabled: Bool);
+    fn set_dither_enabled(&self, dither_enabled: bool);
 
     /// Sets `matrix` as the new model-view matrix.
     /// ## `matrix`
@@ -964,48 +956,47 @@ pub trait FramebufferExt: 'static {
 }
 
 impl<O: IsA<Framebuffer>> FramebufferExt for O {
-    //TODO:
-    // fn add_fence_callback<P: Fn(&Fence) + 'static>(&self, callback: P) -> Option<FenceClosure> {
-    //     // let callback_data: Box_<P> = Box_::new(callback);
-    //     // unsafe extern "C" fn callback_func<P: Fn(&Fence) + 'static>(
-    //     //     fence: *mut ffi::CoglFence,
-    //     //     user_data: glib_sys::gpointer,
-    //     // ) {
-    //     //     let fence = from_glib_borrow(fence);
-    //     //     let callback: &P = &*(user_data as *mut _);
-    //     //     (*callback)(&fence);
-    //     // }
-    //     // let callback = Some(callback_func::<P> as _);
-    //     // let super_callback0: Box_<P> = callback_data;
-    //     // unsafe {
-    //     //     from_glib_none(ffi::cogl_framebuffer_add_fence_callback(
-    //     //         self.as_ref().to_glib_none().0,
-    //     //         callback,
-    //     //         Box_::into_raw(super_callback0) as *mut _,
-    //     //     ))
-    //     // }
-    // }
+    fn add_fence_callback<P: Fn(&Fence) + 'static>(&self, callback: P) -> Option<FenceClosure> {
+        let callback_data: Box_<P> = Box_::new(callback);
+        unsafe extern "C" fn callback_func<P: Fn(&Fence) + 'static>(
+            fence: *mut ffi::CoglFence,
+            user_data: glib_sys::gpointer,
+        ) {
+            let fence = from_glib_borrow(fence);
+            let callback: &P = &*(user_data as *mut _);
+            (*callback)(&fence);
+        }
+        let callback = Some(callback_func::<P> as _);
+        let super_callback0: Box_<P> = callback_data;
+        unsafe {
+            from_glib_none(ffi::cogl_framebuffer_add_fence_callback(
+                self.as_ref().to_glib_none().0,
+                callback,
+                Box_::into_raw(super_callback0) as *mut _,
+            ))
+        }
+    }
 
-    fn allocate(&self) -> Result<Bool, glib::Error> {
+    fn allocate(&self) -> Result<bool, glib::Error> {
         unsafe {
             let mut error = ptr::null_mut();
             let ret = ffi::cogl_framebuffer_allocate(self.as_ref().to_glib_none().0, &mut error);
             if error.is_null() {
-                Ok(ret)
+                Ok(ret == crate::TRUE)
             } else {
                 Err(from_glib_full(error))
             }
         }
     }
 
-    // fn cancel_fence_callback(&self, closure: &mut FenceClosure) {
-    //     unsafe {
-    //         ffi::cogl_framebuffer_cancel_fence_callback(
-    //             self.as_ref().to_glib_none().0,
-    //             closure.to_glib_none_mut().0,
-    //         );
-    //     }
-    // }
+    fn cancel_fence_callback(&self, closure: &mut FenceClosure) {
+        unsafe {
+            ffi::cogl_framebuffer_cancel_fence_callback(
+                self.as_ref().to_glib_none().0,
+                closure.to_glib_none_mut().0,
+            );
+        }
+    }
 
     fn clear(&self, buffers: libc::c_ulong, color: &Color) {
         unsafe {
@@ -1165,16 +1156,24 @@ impl<O: IsA<Framebuffer>> FramebufferExt for O {
         }
     }
 
-    fn get_depth_texture_enabled(&self) -> Bool {
-        unsafe { ffi::cogl_framebuffer_get_depth_texture_enabled(self.as_ref().to_glib_none().0) }
+    fn get_depth_texture_enabled(&self) -> bool {
+        unsafe {
+            ffi::cogl_framebuffer_get_depth_texture_enabled(self.as_ref().to_glib_none().0)
+                == crate::TRUE
+        }
     }
 
-    fn get_depth_write_enabled(&self) -> Bool {
-        unsafe { ffi::cogl_framebuffer_get_depth_write_enabled(self.as_ref().to_glib_none().0) }
+    fn get_depth_write_enabled(&self) -> bool {
+        unsafe {
+            ffi::cogl_framebuffer_get_depth_write_enabled(self.as_ref().to_glib_none().0)
+                == crate::TRUE
+        }
     }
 
-    fn get_dither_enabled(&self) -> Bool {
-        unsafe { ffi::cogl_framebuffer_get_dither_enabled(self.as_ref().to_glib_none().0) }
+    fn get_dither_enabled(&self) -> bool {
+        unsafe {
+            ffi::cogl_framebuffer_get_dither_enabled(self.as_ref().to_glib_none().0) == crate::TRUE
+        }
     }
 
     fn get_green_bits(&self) -> i32 {
@@ -1185,33 +1184,33 @@ impl<O: IsA<Framebuffer>> FramebufferExt for O {
         unsafe { ffi::cogl_framebuffer_get_height(self.as_ref().to_glib_none().0) }
     }
 
-    fn get_is_stereo(&self) -> Bool {
-        unsafe { ffi::cogl_framebuffer_get_is_stereo(self.as_ref().to_glib_none().0) }
+    fn get_is_stereo(&self) -> bool {
+        unsafe {
+            ffi::cogl_framebuffer_get_is_stereo(self.as_ref().to_glib_none().0) == crate::TRUE
+        }
     }
 
-    //TODO:
-    // fn get_modelview_matrix(&self) -> Matrix {
-    //     // unsafe {
-    //     //     let mut matrix = Matrix::uninitialized();
-    //     //     ffi::cogl_framebuffer_get_modelview_matrix(
-    //     //         self.as_ref().to_glib_none().0,
-    //     //         matrix.to_glib_none_mut().0,
-    //     //     );
-    //     //     matrix
-    //     // }
-    // }
+    fn get_modelview_matrix(&self) -> Matrix {
+        unsafe {
+            let mut matrix = Matrix::uninitialized();
+            ffi::cogl_framebuffer_get_modelview_matrix(
+                self.as_ref().to_glib_none().0,
+                matrix.to_glib_none_mut().0,
+            );
+            matrix
+        }
+    }
 
-    //TODO:
-    // fn get_projection_matrix(&self) -> Matrix {
-    //     // unsafe {
-    //     //     let mut matrix = Matrix::uninitialized();
-    //     //     ffi::cogl_framebuffer_get_projection_matrix(
-    //     //         self.as_ref().to_glib_none().0,
-    //     //         matrix.to_glib_none_mut().0,
-    //     //     );
-    //     //     matrix
-    //     // }
-    // }
+    fn get_projection_matrix(&self) -> Matrix {
+        unsafe {
+            let mut matrix = Matrix::uninitialized();
+            ffi::cogl_framebuffer_get_projection_matrix(
+                self.as_ref().to_glib_none().0,
+                matrix.to_glib_none_mut().0,
+            );
+            matrix
+        }
+    }
 
     fn get_red_bits(&self) -> i32 {
         unsafe { ffi::cogl_framebuffer_get_red_bits(self.as_ref().to_glib_none().0) }
@@ -1347,28 +1346,27 @@ impl<O: IsA<Framebuffer>> FramebufferExt for O {
         }
     }
 
-    //TODO:
-    // fn read_pixels(
-    //     &self,
-    //     x: i32,
-    //     y: i32,
-    //     width: i32,
-    //     height: i32,
-    //     format: PixelFormat,
-    //     pixels: u8,
-    // ) -> Bool {
-    //     // unsafe {
-    //     //     ffi::cogl_framebuffer_read_pixels(
-    //     //         self.as_ref().to_glib_none().0,
-    //     //         x,
-    //     //         y,
-    //     //         width,
-    //     //         height,
-    //     //         format.to_glib(),
-    //     //         pixels,
-    //     //     )
-    //     // }
-    // }
+    fn read_pixels(
+        &self,
+        x: i32,
+        y: i32,
+        width: i32,
+        height: i32,
+        format: PixelFormat,
+        pixels: &[u8],
+    ) -> bool {
+        unsafe {
+            ffi::cogl_framebuffer_read_pixels(
+                self.as_ref().to_glib_none().0,
+                x,
+                y,
+                width,
+                height,
+                format.to_glib(),
+                pixels.to_glib_none().0,
+            ) == crate::TRUE
+        }
+    }
 
     fn read_pixels_into_bitmap(
         &self,
@@ -1376,7 +1374,7 @@ impl<O: IsA<Framebuffer>> FramebufferExt for O {
         y: i32,
         source: ReadPixelsFlags,
         bitmap: &Bitmap,
-    ) -> Bool {
+    ) -> bool {
         unsafe {
             ffi::cogl_framebuffer_read_pixels_into_bitmap(
                 self.as_ref().to_glib_none().0,
@@ -1384,7 +1382,7 @@ impl<O: IsA<Framebuffer>> FramebufferExt for O {
                 y,
                 source.to_glib(),
                 bitmap.to_glib_none().0,
-            )
+            ) == crate::TRUE
         }
     }
 
@@ -1445,29 +1443,29 @@ impl<O: IsA<Framebuffer>> FramebufferExt for O {
         }
     }
 
-    fn set_depth_texture_enabled(&self, enabled: Bool) {
+    fn set_depth_texture_enabled(&self, enabled: bool) {
         unsafe {
             ffi::cogl_framebuffer_set_depth_texture_enabled(
                 self.as_ref().to_glib_none().0,
-                enabled,
+                enabled as i32,
             );
         }
     }
 
-    fn set_depth_write_enabled(&self, depth_write_enabled: Bool) {
+    fn set_depth_write_enabled(&self, depth_write_enabled: bool) {
         unsafe {
             ffi::cogl_framebuffer_set_depth_write_enabled(
                 self.as_ref().to_glib_none().0,
-                depth_write_enabled,
+                depth_write_enabled as i32,
             );
         }
     }
 
-    fn set_dither_enabled(&self, dither_enabled: Bool) {
+    fn set_dither_enabled(&self, dither_enabled: bool) {
         unsafe {
             ffi::cogl_framebuffer_set_dither_enabled(
                 self.as_ref().to_glib_none().0,
-                dither_enabled,
+                dither_enabled as i32,
             );
         }
     }

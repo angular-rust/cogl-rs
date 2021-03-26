@@ -1,5 +1,5 @@
-use crate::{Bool, Context, Object, TexturePixmapX11ReportLevel};
-use ffi;
+use crate::{Context, Object, TexturePixmapX11ReportLevel};
+
 use glib;
 use glib::translate::*;
 use std::{fmt, ptr};
@@ -31,15 +31,14 @@ impl TexturePixmapX11 {
     pub fn new(
         context: &Context,
         pixmap: u32,
-        automatic_updates: Bool,
+        automatic_updates: bool,
     ) -> Result<TexturePixmapX11, glib::Error> {
-        skip_assert_initialized!();
         unsafe {
             let mut error = ptr::null_mut();
             let ret = ffi::cogl_texture_pixmap_x11_new(
                 context.to_glib_none().0,
                 pixmap,
-                automatic_updates,
+                automatic_updates as i32,
                 &mut error,
             );
             if error.is_null() {
@@ -83,15 +82,14 @@ impl TexturePixmapX11 {
     pub fn new_left(
         context: &Context,
         pixmap: u32,
-        automatic_updates: Bool,
+        automatic_updates: bool,
     ) -> Result<TexturePixmapX11, glib::Error> {
-        skip_assert_initialized!();
         unsafe {
             let mut error = ptr::null_mut();
             let ret = ffi::cogl_texture_pixmap_x11_new_left(
                 context.to_glib_none().0,
                 pixmap,
-                automatic_updates,
+                automatic_updates as i32,
                 &mut error,
             );
             if error.is_null() {
@@ -112,8 +110,11 @@ impl TexturePixmapX11 {
     ///
     /// `true` if the texture is using an efficient extension
     ///  and `false` otherwise
-    pub fn is_using_tfp_extension(&self) -> Bool {
-        unsafe { ffi::cogl_texture_pixmap_x11_is_using_tfp_extension(self.to_glib_none().0) }
+    pub fn is_using_tfp_extension(&self) -> bool {
+        unsafe {
+            ffi::cogl_texture_pixmap_x11_is_using_tfp_extension(self.to_glib_none().0)
+                == crate::TRUE
+        }
     }
 
     /// Creates a texture object that corresponds to the right-eye image
@@ -172,7 +173,6 @@ impl TexturePixmapX11 {
     }
 
     pub fn error_quark() -> u32 {
-        assert_initialized_main_thread!();
         unsafe { ffi::cogl_texture_pixmap_x11_error_quark() }
     }
 }

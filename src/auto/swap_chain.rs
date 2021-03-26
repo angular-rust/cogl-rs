@@ -1,5 +1,5 @@
-use crate::{Bool, Object};
-use ffi;
+use crate::Object;
+
 use glib::translate::*;
 use std::fmt;
 
@@ -13,13 +13,12 @@ glib_wrapper! {
 
 impl SwapChain {
     pub fn new() -> SwapChain {
-        assert_initialized_main_thread!();
         unsafe { from_glib_full(ffi::cogl_swap_chain_new()) }
     }
 
-    pub fn set_has_alpha(&self, has_alpha: Bool) {
+    pub fn set_has_alpha(&self, has_alpha: bool) {
         unsafe {
-            ffi::cogl_swap_chain_set_has_alpha(self.to_glib_none().0, has_alpha);
+            ffi::cogl_swap_chain_set_has_alpha(self.to_glib_none().0, has_alpha as i32);
         }
     }
 

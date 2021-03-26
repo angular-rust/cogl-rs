@@ -1,4 +1,3 @@
-use ffi;
 use glib::translate::*;
 use glib::{
     error::ErrorDomain,
@@ -64,7 +63,6 @@ impl ToGlib for AttributeType {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglAttributeType> for AttributeType {
     fn from_glib(value: ffi::CoglAttributeType) -> Self {
-        skip_assert_initialized!();
         match value {
             5120 => AttributeType::Byte,
             5121 => AttributeType::UnsignedByte,
@@ -151,7 +149,6 @@ impl ToGlib for BitmapError {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglBitmapError> for BitmapError {
     fn from_glib(value: ffi::CoglBitmapError) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => BitmapError::Failed,
             1 => BitmapError::UnknownType,
@@ -163,7 +160,6 @@ impl FromGlib<ffi::CoglBitmapError> for BitmapError {
 
 impl ErrorDomain for BitmapError {
     fn domain() -> Quark {
-        skip_assert_initialized!();
         unsafe { from_glib(ffi::cogl_bitmap_error_quark()) }
     }
 
@@ -172,7 +168,6 @@ impl ErrorDomain for BitmapError {
     }
 
     fn from(code: i32) -> Option<Self> {
-        skip_assert_initialized!();
         match code {
             0 => Some(BitmapError::Failed),
             1 => Some(BitmapError::UnknownType),
@@ -261,7 +256,6 @@ impl ToGlib for BlendStringError {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglBlendStringError> for BlendStringError {
     fn from_glib(value: ffi::CoglBlendStringError) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => BlendStringError::ParseError,
             1 => BlendStringError::ArgumentParseError,
@@ -274,7 +268,6 @@ impl FromGlib<ffi::CoglBlendStringError> for BlendStringError {
 
 impl ErrorDomain for BlendStringError {
     fn domain() -> Quark {
-        skip_assert_initialized!();
         unsafe { from_glib(ffi::cogl_blend_string_error_quark()) }
     }
 
@@ -283,7 +276,6 @@ impl ErrorDomain for BlendStringError {
     }
 
     fn from(code: i32) -> Option<Self> {
-        skip_assert_initialized!();
         match code {
             0 => Some(BlendStringError::ParseError),
             1 => Some(BlendStringError::ArgumentParseError),
@@ -358,7 +350,6 @@ impl ToGlib for BufferError {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglBufferError> for BufferError {
     fn from_glib(value: ffi::CoglBufferError) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => BufferError::BufferErrorMap,
             value => BufferError::__Unknown(value),
@@ -414,7 +405,6 @@ impl ToGlib for BufferUpdateHint {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglBufferUpdateHint> for BufferUpdateHint {
     fn from_glib(value: ffi::CoglBufferUpdateHint) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => BufferUpdateHint::Static,
             1 => BufferUpdateHint::Dynamic,
@@ -502,7 +492,6 @@ impl ToGlib for DepthTestFunction {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglDepthTestFunction> for DepthTestFunction {
     fn from_glib(value: ffi::CoglDepthTestFunction) -> Self {
-        skip_assert_initialized!();
         match value {
             512 => DepthTestFunction::Never,
             513 => DepthTestFunction::Less,
@@ -604,7 +593,6 @@ impl ToGlib for Driver {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglDriver> for Driver {
     fn from_glib(value: ffi::CoglDriver) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => Driver::Any,
             1 => Driver::Nop,
@@ -784,7 +772,6 @@ impl ToGlib for FeatureID {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglFeatureID> for FeatureID {
     fn from_glib(value: ffi::CoglFeatureID) -> Self {
-        skip_assert_initialized!();
         match value {
             1 => FeatureID::OglFeatureIdTextureNpotBasic,
             2 => FeatureID::OglFeatureIdTextureNpotMipmap,
@@ -859,7 +846,6 @@ impl ToGlib for FilterReturn {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglFilterReturn> for FilterReturn {
     fn from_glib(value: ffi::CoglFilterReturn) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => FilterReturn::Continue,
             1 => FilterReturn::Remove,
@@ -960,7 +946,6 @@ impl ToGlib for FogMode {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglFogMode> for FogMode {
     fn from_glib(value: ffi::CoglFogMode) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => FogMode::Linear,
             1 => FogMode::Exponential,
@@ -1057,7 +1042,6 @@ impl ToGlib for FrameEvent {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglFrameEvent> for FrameEvent {
     fn from_glib(value: ffi::CoglFrameEvent) -> Self {
-        skip_assert_initialized!();
         match value {
             1 => FrameEvent::Sync,
             2 => FrameEvent::Complete,
@@ -1102,7 +1086,6 @@ impl ToGlib for FramebufferError {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglFramebufferError> for FramebufferError {
     fn from_glib(value: ffi::CoglFramebufferError) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => FramebufferError::FramebufferErrorAllocate,
             value => FramebufferError::__Unknown(value),
@@ -1155,7 +1138,6 @@ impl ToGlib for GLES2ContextError {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglGLES2ContextError> for GLES2ContextError {
     fn from_glib(value: ffi::CoglGLES2ContextError) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => GLES2ContextError::Unsupported,
             1 => GLES2ContextError::Driver,
@@ -1218,7 +1200,6 @@ impl ToGlib for IndicesType {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglIndicesType> for IndicesType {
     fn from_glib(value: ffi::CoglIndicesType) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => IndicesType::Byte,
             1 => IndicesType::Short,
@@ -1309,7 +1290,6 @@ impl ToGlib for MaterialAlphaFunc {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglMaterialAlphaFunc> for MaterialAlphaFunc {
     fn from_glib(value: ffi::CoglMaterialAlphaFunc) -> Self {
-        skip_assert_initialized!();
         match value {
             512 => MaterialAlphaFunc::Never,
             513 => MaterialAlphaFunc::Less,
@@ -1401,7 +1381,6 @@ impl ToGlib for MaterialFilter {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglMaterialFilter> for MaterialFilter {
     fn from_glib(value: ffi::CoglMaterialFilter) -> Self {
-        skip_assert_initialized!();
         match value {
             9728 => MaterialFilter::Nearest,
             9729 => MaterialFilter::Linear,
@@ -1474,7 +1453,6 @@ impl ToGlib for MaterialLayerType {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglMaterialLayerType> for MaterialLayerType {
     fn from_glib(value: ffi::CoglMaterialLayerType) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => MaterialLayerType::Texture,
             value => MaterialLayerType::__Unknown(value),
@@ -1548,7 +1526,6 @@ impl ToGlib for MaterialWrapMode {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglMaterialWrapMode> for MaterialWrapMode {
     fn from_glib(value: ffi::CoglMaterialWrapMode) -> Self {
-        skip_assert_initialized!();
         match value {
             10497 => MaterialWrapMode::Repeat,
             33071 => MaterialWrapMode::ClampToEdge,
@@ -1657,7 +1634,6 @@ impl ToGlib for PipelineAlphaFunc {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglPipelineAlphaFunc> for PipelineAlphaFunc {
     fn from_glib(value: ffi::CoglPipelineAlphaFunc) -> Self {
-        skip_assert_initialized!();
         match value {
             512 => PipelineAlphaFunc::Never,
             513 => PipelineAlphaFunc::Less,
@@ -1724,7 +1700,6 @@ impl ToGlib for PipelineCullFaceMode {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglPipelineCullFaceMode> for PipelineCullFaceMode {
     fn from_glib(value: ffi::CoglPipelineCullFaceMode) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => PipelineCullFaceMode::None,
             1 => PipelineCullFaceMode::Front,
@@ -1811,7 +1786,6 @@ impl ToGlib for PipelineFilter {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglPipelineFilter> for PipelineFilter {
     fn from_glib(value: ffi::CoglPipelineFilter) -> Self {
-        skip_assert_initialized!();
         match value {
             9728 => PipelineFilter::Nearest,
             9729 => PipelineFilter::Linear,
@@ -1892,7 +1866,6 @@ impl ToGlib for PipelineWrapMode {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglPipelineWrapMode> for PipelineWrapMode {
     fn from_glib(value: ffi::CoglPipelineWrapMode) -> Self {
-        skip_assert_initialized!();
         match value {
             10497 => PipelineWrapMode::Repeat,
             33648 => PipelineWrapMode::MirroredRepeat,
@@ -2077,7 +2050,6 @@ impl ToGlib for PixelFormat {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglPixelFormat> for PixelFormat {
     fn from_glib(value: ffi::CoglPixelFormat) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => PixelFormat::Any,
             17 => PixelFormat::A8,
@@ -2201,7 +2173,6 @@ impl ToGlib for PollFDEvent {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglPollFDEvent> for PollFDEvent {
     fn from_glib(value: ffi::CoglPollFDEvent) -> Self {
-        skip_assert_initialized!();
         match value {
             1 => PollFDEvent::In,
             2 => PollFDEvent::Pri,
@@ -2253,7 +2224,6 @@ impl ToGlib for RendererError {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglRendererError> for RendererError {
     fn from_glib(value: ffi::CoglRendererError) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => RendererError::XlibDisplayOpen,
             1 => RendererError::BadConstraint,
@@ -2264,7 +2234,6 @@ impl FromGlib<ffi::CoglRendererError> for RendererError {
 
 impl ErrorDomain for RendererError {
     fn domain() -> Quark {
-        skip_assert_initialized!();
         unsafe { from_glib(ffi::cogl_renderer_error_quark()) }
     }
 
@@ -2273,7 +2242,6 @@ impl ErrorDomain for RendererError {
     }
 
     fn from(code: i32) -> Option<Self> {
-        skip_assert_initialized!();
         match code {
             0 => Some(RendererError::XlibDisplayOpen),
             1 => Some(RendererError::BadConstraint),
@@ -2345,7 +2313,6 @@ impl ToGlib for ShaderType {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglShaderType> for ShaderType {
     fn from_glib(value: ffi::CoglShaderType) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => ShaderType::Vertex,
             1 => ShaderType::Fragment,
@@ -2736,7 +2703,6 @@ impl ToGlib for SnippetHook {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglSnippetHook> for SnippetHook {
     fn from_glib(value: ffi::CoglSnippetHook) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => SnippetHook::Vertex,
             1 => SnippetHook::VertexTransform,
@@ -2799,7 +2765,6 @@ impl ToGlib for StereoMode {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglStereoMode> for StereoMode {
     fn from_glib(value: ffi::CoglStereoMode) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => StereoMode::Both,
             1 => StereoMode::Left,
@@ -2908,7 +2873,6 @@ impl ToGlib for SubpixelOrder {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglSubpixelOrder> for SubpixelOrder {
     fn from_glib(value: ffi::CoglSubpixelOrder) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => SubpixelOrder::Unknown,
             1 => SubpixelOrder::None,
@@ -2983,7 +2947,6 @@ impl ToGlib for SystemError {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglSystemError> for SystemError {
     fn from_glib(value: ffi::CoglSystemError) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => SystemError::CoglSystemErrorUnsupported,
             1 => SystemError::CoglSystemErrorNoMemory,
@@ -3072,7 +3035,6 @@ impl ToGlib for TextureComponents {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglTextureComponents> for TextureComponents {
     fn from_glib(value: ffi::CoglTextureComponents) -> Self {
-        skip_assert_initialized!();
         match value {
             1 => TextureComponents::A,
             2 => TextureComponents::Rg,
@@ -3158,7 +3120,6 @@ impl ToGlib for TextureError {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglTextureError> for TextureError {
     fn from_glib(value: ffi::CoglTextureError) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => TextureError::Size,
             1 => TextureError::Format,
@@ -3171,7 +3132,6 @@ impl FromGlib<ffi::CoglTextureError> for TextureError {
 
 impl ErrorDomain for TextureError {
     fn domain() -> Quark {
-        skip_assert_initialized!();
         unsafe { from_glib(ffi::cogl_texture_error_quark()) }
     }
 
@@ -3180,7 +3140,6 @@ impl ErrorDomain for TextureError {
     }
 
     fn from(code: i32) -> Option<Self> {
-        skip_assert_initialized!();
         match code {
             0 => Some(TextureError::Size),
             1 => Some(TextureError::Format),
@@ -3256,7 +3215,6 @@ impl ToGlib for TexturePixmapX11Error {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglTexturePixmapX11Error> for TexturePixmapX11Error {
     fn from_glib(value: ffi::CoglTexturePixmapX11Error) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => TexturePixmapX11Error::TexturePixmapX11ErrorX11,
             value => TexturePixmapX11Error::__Unknown(value),
@@ -3315,7 +3273,6 @@ impl ToGlib for TexturePixmapX11ReportLevel {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglTexturePixmapX11ReportLevel> for TexturePixmapX11ReportLevel {
     fn from_glib(value: ffi::CoglTexturePixmapX11ReportLevel) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => TexturePixmapX11ReportLevel::RawRectangles,
             1 => TexturePixmapX11ReportLevel::DeltaRectangles,
@@ -3371,7 +3328,6 @@ impl ToGlib for TextureType {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglTextureType> for TextureType {
     fn from_glib(value: ffi::CoglTextureType) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => TextureType::_2d,
             1 => TextureType::_3d,
@@ -3472,7 +3428,6 @@ impl ToGlib for VerticesMode {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglVerticesMode> for VerticesMode {
     fn from_glib(value: ffi::CoglVerticesMode) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => VerticesMode::Points,
             1 => VerticesMode::Lines,
@@ -3554,7 +3509,6 @@ impl ToGlib for Winding {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglWinding> for Winding {
     fn from_glib(value: ffi::CoglWinding) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => Winding::Clockwise,
             1 => Winding::CounterClockwise,
@@ -3658,7 +3612,6 @@ impl ToGlib for WinsysFeature {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglWinsysFeature> for WinsysFeature {
     fn from_glib(value: ffi::CoglWinsysFeature) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => WinsysFeature::MultipleOnscreen,
             1 => WinsysFeature::SwapThrottle,
@@ -3786,7 +3739,6 @@ impl ToGlib for WinsysID {
 #[doc(hidden)]
 impl FromGlib<ffi::CoglWinsysID> for WinsysID {
     fn from_glib(value: ffi::CoglWinsysID) -> Self {
-        skip_assert_initialized!();
         match value {
             0 => WinsysID::Any,
             1 => WinsysID::Stub,

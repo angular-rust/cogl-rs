@@ -1,5 +1,5 @@
-use crate::{Bool, Object, SwapChain};
-use ffi;
+use crate::{Object, SwapChain};
+
 use glib::translate::*;
 use std::fmt;
 
@@ -13,12 +13,7 @@ glib_wrapper! {
 
 impl OnscreenTemplate {
     pub fn new(swap_chain: &SwapChain) -> OnscreenTemplate {
-        skip_assert_initialized!();
-        unsafe {
-            from_glib_full(ffi::cogl_onscreen_template_new(
-                swap_chain.to_glib_none().0,
-            ))
-        }
+        unsafe { from_glib_full(ffi::cogl_onscreen_template_new(swap_chain.to_glib_none().0)) }
     }
 
     /// Requires that any future CoglOnscreen framebuffers derived from
@@ -50,9 +45,9 @@ impl OnscreenTemplate {
     /// fail.
     /// ## `enabled`
     /// Whether framebuffers are created with stereo buffers
-    pub fn set_stereo_enabled(&self, enabled: Bool) {
+    pub fn set_stereo_enabled(&self, enabled: bool) {
         unsafe {
-            ffi::cogl_onscreen_template_set_stereo_enabled(self.to_glib_none().0, enabled);
+            ffi::cogl_onscreen_template_set_stereo_enabled(self.to_glib_none().0, enabled as i32);
         }
     }
 
@@ -61,9 +56,9 @@ impl OnscreenTemplate {
     /// `throttled` argument.
     /// ## `throttled`
     /// Whether throttling should be enabled
-    pub fn set_swap_throttled(&self, throttled: Bool) {
+    pub fn set_swap_throttled(&self, throttled: bool) {
         unsafe {
-            ffi::cogl_onscreen_template_set_swap_throttled(self.to_glib_none().0, throttled);
+            ffi::cogl_onscreen_template_set_swap_throttled(self.to_glib_none().0, throttled as i32);
         }
     }
 }

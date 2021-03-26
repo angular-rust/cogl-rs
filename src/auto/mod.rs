@@ -1,5 +1,3 @@
-#![allow(unused_variables)]
-
 mod atlas_texture;
 pub use self::atlas_texture::{AtlasTexture, AtlasTextureClass};
 
@@ -25,8 +23,8 @@ mod frame_info;
 pub use self::frame_info::{FrameInfo, FrameInfoClass};
 
 mod framebuffer;
-pub use self::framebuffer::{Framebuffer, NONE_FRAMEBUFFER};
 pub use self::framebuffer::FramebufferExt;
+pub use self::framebuffer::{Framebuffer, NONE_FRAMEBUFFER};
 
 mod gles2_context;
 pub use self::gles2_context::{GLES2Context, GLES2ContextClass};
@@ -41,8 +39,8 @@ mod matrix_stack;
 pub use self::matrix_stack::{MatrixStack, MatrixStackClass};
 
 mod object;
-pub use self::object::{Object, ObjectClass, NONE_OBJECT};
 pub use self::object::ObjectExt;
+pub use self::object::{Object, ObjectClass, NONE_OBJECT};
 
 mod onscreen;
 pub use self::onscreen::{Onscreen, OnscreenClass};
@@ -75,8 +73,8 @@ mod swap_chain;
 pub use self::swap_chain::{SwapChain, SwapChainClass};
 
 mod texture;
-pub use self::texture::{Texture, NONE_TEXTURE};
 pub use self::texture::TextureExt;
+pub use self::texture::{Texture, NONE_TEXTURE};
 
 mod texture2_d;
 pub use self::texture2_d::{Texture2D, Texture2DClass};
@@ -161,7 +159,7 @@ pub use self::enums::WinsysID;
 mod flags;
 pub use self::flags::BufferAccess;
 pub use self::flags::BufferBit;
-// pub use self::flags::BufferMapHint;
+pub use self::flags::BufferMapHint;
 pub use self::flags::BufferTarget;
 pub use self::flags::ColorMask;
 pub use self::flags::FeatureFlags;
@@ -171,12 +169,12 @@ pub use self::flags::TextureFlags;
 
 mod alias;
 pub use alias::Angle;
-pub use alias::Bool;
+// pub use alias::Bool;
 pub use alias::Buffer;
 // pub use alias::Handle;
 pub use alias::MetaTexture;
 pub use alias::PrimitiveTexture;
-// pub use alias::UserDataDestroyCallback;
+pub use alias::UserDataDestroyCallback;
 
 #[doc(hidden)]
 pub mod traits {

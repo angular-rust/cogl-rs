@@ -1,5 +1,5 @@
 use crate::{Bitmap, Context, Object, PixelFormat};
-use ffi;
+
 use glib;
 use glib::translate::*;
 use std::{fmt, ptr};
@@ -14,7 +14,6 @@ glib_wrapper! {
 
 impl AtlasTexture {
     pub fn from_bitmap(bmp: &Bitmap) -> AtlasTexture {
-        skip_assert_initialized!();
         unsafe {
             from_glib_full(ffi::cogl_atlas_texture_new_from_bitmap(
                 bmp.to_glib_none().0,
@@ -22,37 +21,34 @@ impl AtlasTexture {
         }
     }
 
-    // TODO:
-    // pub fn from_data(
-    //     ctx: &Context,
-    //     width: i32,
-    //     height: i32,
-    //     format: PixelFormat,
-    //     rowstride: i32,
-    //     data: u8,
-    // ) -> Result<AtlasTexture, glib::Error> {
-    //     // skip_assert_initialized!();
-    //     // unsafe {
-    //     //     let mut error = ptr::null_mut();
-    //     //     let ret = ffi::cogl_atlas_texture_new_from_data(
-    //     //         ctx.to_glib_none().0,
-    //     //         width,
-    //     //         height,
-    //     //         format.to_glib(),
-    //     //         rowstride,
-    //     //         data,
-    //     //         &mut error,
-    //     //     );
-    //     //     if error.is_null() {
-    //     //         Ok(from_glib_full(ret))
-    //     //     } else {
-    //     //         Err(from_glib_full(error))
-    //     //     }
-    //     // }
-    // }
+    pub fn from_data(
+        ctx: &Context,
+        width: i32,
+        height: i32,
+        format: PixelFormat,
+        rowstride: i32,
+        data: &[u8],
+    ) -> Result<AtlasTexture, glib::Error> {
+        unsafe {
+            let mut error = ptr::null_mut();
+            let ret = ffi::cogl_atlas_texture_new_from_data(
+                ctx.to_glib_none().0,
+                width,
+                height,
+                format.to_glib(),
+                rowstride,
+                data.as_ptr(),
+                &mut error,
+            );
+            if error.is_null() {
+                Ok(from_glib_full(ret))
+            } else {
+                Err(from_glib_full(error))
+            }
+        }
+    }
 
     pub fn from_file(ctx: &Context, filename: &str) -> Result<AtlasTexture, glib::Error> {
-        skip_assert_initialized!();
         unsafe {
             let mut error = ptr::null_mut();
             let ret = ffi::cogl_atlas_texture_new_from_file(
@@ -69,7 +65,6 @@ impl AtlasTexture {
     }
 
     pub fn with_size(ctx: &Context, width: i32, height: i32) -> AtlasTexture {
-        skip_assert_initialized!();
         unsafe {
             from_glib_full(ffi::cogl_atlas_texture_new_with_size(
                 ctx.to_glib_none().0,

@@ -1,6 +1,6 @@
 use crate::Bitmap;
 use crate::{Context, Object, PixelFormat, Texture};
-use ffi;
+
 use glib::translate::*;
 use std::fmt;
 
@@ -14,7 +14,6 @@ glib_wrapper! {
 
 impl TextureRectangle {
     pub fn from_bitmap(bitmap: &Bitmap) -> TextureRectangle {
-        skip_assert_initialized!();
         unsafe {
             from_glib_full(ffi::cogl_texture_rectangle_new_from_bitmap(
                 bitmap.to_glib_none().0,
@@ -29,7 +28,6 @@ impl TextureRectangle {
         height: i32,
         format: PixelFormat,
     ) -> TextureRectangle {
-        skip_assert_initialized!();
         unsafe {
             from_glib_full(ffi::cogl_texture_rectangle_new_from_foreign(
                 ctx.to_glib_none().0,
@@ -42,7 +40,6 @@ impl TextureRectangle {
     }
 
     pub fn with_size(ctx: &Context, width: i32, height: i32) -> TextureRectangle {
-        skip_assert_initialized!();
         unsafe {
             from_glib_full(ffi::cogl_texture_rectangle_new_with_size(
                 ctx.to_glib_none().0,

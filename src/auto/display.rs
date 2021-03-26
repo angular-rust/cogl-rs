@@ -1,5 +1,5 @@
-use crate::{Bool, Object, OnscreenTemplate, Renderer};
-use ffi;
+use crate::{Object, OnscreenTemplate, Renderer};
+
 use glib;
 use glib::translate::*;
 use std::{fmt, ptr};
@@ -52,7 +52,6 @@ impl Display {
     /// A newly allocated `Display`
     ///  object in a mutable configuration mode.
     pub fn new(renderer: &Renderer, onscreen_template: &OnscreenTemplate) -> Display {
-        skip_assert_initialized!();
         unsafe {
             from_glib_full(ffi::cogl_display_new(
                 renderer.to_glib_none().0,
@@ -113,12 +112,12 @@ impl Display {
     ///
     /// Returns `true` if there was no error, else it returns
     ///  `false` and returns an exception via `error`.
-    pub fn setup(&self) -> Result<Bool, glib::Error> {
+    pub fn setup(&self) -> Result<bool, glib::Error> {
         unsafe {
             let mut error = ptr::null_mut();
             let ret = ffi::cogl_display_setup(self.to_glib_none().0, &mut error);
             if error.is_null() {
-                Ok(ret)
+                Ok(ret == crate::TRUE)
             } else {
                 Err(from_glib_full(error))
             }

@@ -1,9 +1,8 @@
-// use crate::DepthState;
 use crate::{
-    Bool, Color, ColorMask, Context, Matrix, Object, PipelineAlphaFunc, PipelineCullFaceMode,
+    Color, ColorMask, Context, DepthState, Matrix, Object, PipelineAlphaFunc, PipelineCullFaceMode,
     PipelineFilter, PipelineWrapMode, Snippet, Texture, TextureType, Winding,
 };
-use ffi;
+
 use glib;
 use glib::object::IsA;
 use glib::translate::*;
@@ -28,7 +27,6 @@ impl Pipeline {
     ///
     /// a pointer to a new `Pipeline`
     pub fn new(context: &Context) -> Pipeline {
-        skip_assert_initialized!();
         unsafe { from_glib_full(ffi::cogl_pipeline_new(context.to_glib_none().0)) }
     }
 
@@ -88,9 +86,10 @@ impl Pipeline {
     /// ## `user_data`
     /// Private data that will be passed to the
     ///  callback
-    pub fn foreach_layer<P: FnMut(&Pipeline, i32) -> Bool>(&self, callback: P) {
+    pub fn foreach_layer<P: FnMut(&Pipeline, i32) -> i32>(&self, callback: P) {
+        //TODO: should replace i32 to bool in callback
         let callback_data: P = callback;
-        unsafe extern "C" fn callback_func<P: FnMut(&Pipeline, i32) -> Bool>(
+        unsafe extern "C" fn callback_func<P: FnMut(&Pipeline, i32) -> i32>(
             pipeline: *mut ffi::CoglPipeline,
             layer_index: libc::c_int,
             user_data: glib_sys::gpointer,
@@ -143,18 +142,17 @@ impl Pipeline {
         }
     }
 
-    //TODO:
-    // /// Retrieves the current pipeline color.
-    // ///
-    // /// ## `color`
-    // /// The location to store the color
-    // pub fn get_color(&self) -> Color {
-    //     // unsafe {
-    //     //     let mut color = Color::uninitialized();
-    //     //     ffi::cogl_pipeline_get_color(self.to_glib_none().0, color.to_glib_none_mut().0);
-    //     //     color
-    //     // }
-    // }
+    /// Retrieves the current pipeline color.
+    ///
+    /// ## `color`
+    /// The location to store the color
+    pub fn get_color(&self) -> Color {
+        unsafe {
+            let mut color = Color::uninitialized();
+            ffi::cogl_pipeline_get_color(self.to_glib_none().0, color.to_glib_none_mut().0);
+            color
+        }
+    }
 
     /// Gets the current `ColorMask` of which channels would be written to the
     /// current framebuffer. Each bit set in the mask means that the
@@ -179,21 +177,21 @@ impl Pipeline {
         unsafe { from_glib(ffi::cogl_pipeline_get_cull_face_mode(self.to_glib_none().0)) }
     }
 
-    // /// Retrieves the current depth state configuration for the given
-    // /// `self` as previously set using `Pipeline::set_depth_state`.
-    // ///
-    // /// ## `state_out`
-    // /// A destination `DepthState` struct
-    // pub fn get_depth_state(&self) -> DepthState {
-    //     unsafe {
-    //         let mut state_out = DepthState::uninitialized();
-    //         ffi::cogl_pipeline_get_depth_state(
-    //             self.to_glib_none().0,
-    //             state_out.to_glib_none_mut().0,
-    //         );
-    //         state_out
-    //     }
-    // }
+    /// Retrieves the current depth state configuration for the given
+    /// `self` as previously set using `Pipeline::set_depth_state`.
+    ///
+    /// ## `state_out`
+    /// A destination `DepthState` struct
+    pub fn get_depth_state(&self) -> DepthState {
+        unsafe {
+            let mut state_out = DepthState::uninitialized();
+            ffi::cogl_pipeline_get_depth_state(
+                self.to_glib_none().0,
+                state_out.to_glib_none_mut().0,
+            );
+            state_out
+        }
+    }
 
     /// Retrieves the current diffuse color for `self`
     ///
@@ -291,12 +289,12 @@ impl Pipeline {
     ///
     /// whether the texture coordinates will be replaced with
     /// point sprite coordinates.
-    pub fn get_layer_point_sprite_coords_enabled(&self, layer_index: i32) -> Bool {
+    pub fn get_layer_point_sprite_coords_enabled(&self, layer_index: i32) -> bool {
         unsafe {
             ffi::cogl_pipeline_get_layer_point_sprite_coords_enabled(
                 self.to_glib_none().0,
                 layer_index,
-            )
+            ) == crate::TRUE
         }
     }
 
@@ -390,8 +388,10 @@ impl Pipeline {
     /// `true` if the pipeline has per-vertex point size
     ///  enabled or `false` otherwise. The per-vertex point size can be
     ///  enabled with `Pipeline::set_per_vertex_point_size`.
-    pub fn get_per_vertex_point_size(&self) -> Bool {
-        unsafe { ffi::cogl_pipeline_get_per_vertex_point_size(self.to_glib_none().0) }
+    pub fn get_per_vertex_point_size(&self) -> bool {
+        unsafe {
+            ffi::cogl_pipeline_get_per_vertex_point_size(self.to_glib_none().0) == crate::TRUE
+        }
     }
 
     /// Get the size of points drawn when `VerticesMode::Points` is
@@ -595,7 +595,7 @@ impl Pipeline {
     ///  described blending is supported by the underlying driver/hardware. If
     ///  there was an error, `false` is returned and `error` is set accordingly (if
     ///  present).
-    pub fn set_blend(&self, blend_string: &str) -> Result<Bool, glib::Error> {
+    pub fn set_blend(&self, blend_string: &str) -> Result<bool, glib::Error> {
         unsafe {
             let mut error = ptr::null_mut();
             let ret = ffi::cogl_pipeline_set_blend(
@@ -604,7 +604,7 @@ impl Pipeline {
                 &mut error,
             );
             if error.is_null() {
-                Ok(ret)
+                Ok(ret == crate::TRUE)
             } else {
                 Err(from_glib_full(error))
             }
@@ -713,36 +713,36 @@ impl Pipeline {
         }
     }
 
-    // /// This commits all the depth state configured in `state` struct to the
-    // /// given `self`. The configuration values are copied into the
-    // /// pipeline so there is no requirement to keep the `DepthState`
-    // /// struct around if you don't need it any more.
-    // ///
-    // /// Note: Since some platforms do not support the depth range feature
-    // /// it is possible for this function to fail and report an `error`.
-    // ///
-    // /// ## `state`
-    // /// A `DepthState` struct
-    // ///
-    // /// # Returns
-    // ///
-    // /// TRUE if the GPU supports all the given `state` else `false`
-    // ///  and returns an `error`.
-    // pub fn set_depth_state(&self, state: &DepthState) -> Result<Bool, glib::Error> {
-    //     unsafe {
-    //         let mut error = ptr::null_mut();
-    //         let ret = ffi::cogl_pipeline_set_depth_state(
-    //             self.to_glib_none().0,
-    //             state.to_glib_none().0,
-    //             &mut error,
-    //         );
-    //         if error.is_null() {
-    //             Ok(ret)
-    //         } else {
-    //             Err(from_glib_full(error))
-    //         }
-    //     }
-    // }
+    /// This commits all the depth state configured in `state` struct to the
+    /// given `self`. The configuration values are copied into the
+    /// pipeline so there is no requirement to keep the `DepthState`
+    /// struct around if you don't need it any more.
+    ///
+    /// Note: Since some platforms do not support the depth range feature
+    /// it is possible for this function to fail and report an `error`.
+    ///
+    /// ## `state`
+    /// A `DepthState` struct
+    ///
+    /// # Returns
+    ///
+    /// TRUE if the GPU supports all the given `state` else `false`
+    ///  and returns an `error`.
+    pub fn set_depth_state(&self, state: &DepthState) -> Result<bool, glib::Error> {
+        unsafe {
+            let mut error = ptr::null_mut();
+            let ret = ffi::cogl_pipeline_set_depth_state(
+                self.to_glib_none().0,
+                state.to_glib_none().0,
+                &mut error,
+            );
+            if error.is_null() {
+                Ok(ret == crate::TRUE)
+            } else {
+                Err(from_glib_full(error))
+            }
+        }
+    }
 
     /// Sets the pipeline's diffuse color, in the standard OpenGL lighting
     /// model. The diffuse color is most intense where the light hits the
@@ -885,7 +885,7 @@ impl Pipeline {
         &self,
         layer_index: i32,
         blend_string: &str,
-    ) -> Result<Bool, glib::Error> {
+    ) -> Result<bool, glib::Error> {
         unsafe {
             let mut error = ptr::null_mut();
             let ret = ffi::cogl_pipeline_set_layer_combine(
@@ -895,7 +895,7 @@ impl Pipeline {
                 &mut error,
             );
             if error.is_null() {
-                Ok(ret)
+                Ok(ret == crate::TRUE)
             } else {
                 Err(from_glib_full(error))
             }
@@ -1012,18 +1012,18 @@ impl Pipeline {
     pub fn set_layer_point_sprite_coords_enabled(
         &self,
         layer_index: i32,
-        enable: Bool,
-    ) -> Result<Bool, glib::Error> {
+        enable: bool,
+    ) -> Result<bool, glib::Error> {
         unsafe {
             let mut error = ptr::null_mut();
             let ret = ffi::cogl_pipeline_set_layer_point_sprite_coords_enabled(
                 self.to_glib_none().0,
                 layer_index,
-                enable,
+                enable as i32,
                 &mut error,
             );
             if error.is_null() {
-                Ok(ret)
+                Ok(ret == crate::TRUE)
             } else {
                 Err(from_glib_full(error))
             }
@@ -1131,16 +1131,16 @@ impl Pipeline {
     /// # Returns
     ///
     /// `true` if the change suceeded or `false` otherwise
-    pub fn set_per_vertex_point_size(&self, enable: Bool) -> Result<Bool, glib::Error> {
+    pub fn set_per_vertex_point_size(&self, enable: bool) -> Result<bool, glib::Error> {
         unsafe {
             let mut error = ptr::null_mut();
             let ret = ffi::cogl_pipeline_set_per_vertex_point_size(
                 self.to_glib_none().0,
-                enable,
+                enable as i32,
                 &mut error,
             );
             if error.is_null() {
-                Ok(ret)
+                Ok(ret == crate::TRUE)
             } else {
                 Err(from_glib_full(error))
             }
@@ -1239,134 +1239,131 @@ impl Pipeline {
         }
     }
 
-    //TODO:
-    // /// Sets new values for the uniform at `uniform_location`. If this
-    // /// pipeline has a user program attached and is later used as a source
-    // /// for drawing, the given values will be assigned to the uniform which
-    // /// can be accessed from the shader's source. The value for
-    // /// `uniform_location` should be retrieved from the string name of the
-    // /// uniform by calling `Pipeline::get_uniform_location`.
-    // ///
-    // /// This function can be used to set any floating point type uniform,
-    // /// including float arrays and float vectors. For example, to set a
-    // /// single vec4 uniform you would use 4 for `n_components` and 1 for
-    // /// `count`. To set an array of 8 float values, you could use 1 for
-    // /// `n_components` and 8 for `count`.
-    // ///
-    // /// ## `uniform_location`
-    // /// The uniform's location identifier
-    // /// ## `n_components`
-    // /// The number of components in the corresponding uniform's type
-    // /// ## `count`
-    // /// The number of values to set
-    // /// ## `value`
-    // /// Pointer to the new values to set
-    // pub fn set_uniform_float(
-    //     &self,
-    //     uniform_location: i32,
-    //     n_components: i32,
-    //     count: i32,
-    //     value: f32,
-    // ) {
-    //     // unsafe {
-    //     //     ffi::cogl_pipeline_set_uniform_float(
-    //     //         self.to_glib_none().0,
-    //     //         uniform_location,
-    //     //         n_components,
-    //     //         count,
-    //     //         value,
-    //     //     );
-    //     // }
-    // }
+    /// Sets new values for the uniform at `uniform_location`. If this
+    /// pipeline has a user program attached and is later used as a source
+    /// for drawing, the given values will be assigned to the uniform which
+    /// can be accessed from the shader's source. The value for
+    /// `uniform_location` should be retrieved from the string name of the
+    /// uniform by calling `Pipeline::get_uniform_location`.
+    ///
+    /// This function can be used to set any floating point type uniform,
+    /// including float arrays and float vectors. For example, to set a
+    /// single vec4 uniform you would use 4 for `n_components` and 1 for
+    /// `count`. To set an array of 8 float values, you could use 1 for
+    /// `n_components` and 8 for `count`.
+    ///
+    /// ## `uniform_location`
+    /// The uniform's location identifier
+    /// ## `n_components`
+    /// The number of components in the corresponding uniform's type
+    /// ## `count`
+    /// The number of values to set
+    /// ## `value`
+    /// Pointer to the new values to set
+    pub fn set_uniform_float(
+        &self,
+        uniform_location: i32,
+        n_components: i32,
+        count: i32,
+        value: &[f32],
+    ) {
+        unsafe {
+            ffi::cogl_pipeline_set_uniform_float(
+                self.to_glib_none().0,
+                uniform_location,
+                n_components,
+                count,
+                value.as_ptr(),
+            );
+        }
+    }
 
-    //TODO:
-    // /// Sets new values for the uniform at `uniform_location`. If this
-    // /// pipeline has a user program attached and is later used as a source
-    // /// for drawing, the given values will be assigned to the uniform which
-    // /// can be accessed from the shader's source. The value for
-    // /// `uniform_location` should be retrieved from the string name of the
-    // /// uniform by calling `Pipeline::get_uniform_location`.
-    // ///
-    // /// This function can be used to set any integer type uniform,
-    // /// including int arrays and int vectors. For example, to set a single
-    // /// ivec4 uniform you would use 4 for `n_components` and 1 for
-    // /// `count`. To set an array of 8 int values, you could use 1 for
-    // /// `n_components` and 8 for `count`.
-    // ///
-    // /// ## `uniform_location`
-    // /// The uniform's location identifier
-    // /// ## `n_components`
-    // /// The number of components in the corresponding uniform's type
-    // /// ## `count`
-    // /// The number of values to set
-    // /// ## `value`
-    // /// Pointer to the new values to set
-    // pub fn set_uniform_int(
-    //     &self,
-    //     uniform_location: i32,
-    //     n_components: i32,
-    //     count: i32,
-    //     value: i32,
-    // ) {
-    //     // unsafe {
-    //     //     ffi::cogl_pipeline_set_uniform_int(
-    //     //         self.to_glib_none().0,
-    //     //         uniform_location,
-    //     //         n_components,
-    //     //         count,
-    //     //         value,
-    //     //     );
-    //     // }
-    // }
+    /// Sets new values for the uniform at `uniform_location`. If this
+    /// pipeline has a user program attached and is later used as a source
+    /// for drawing, the given values will be assigned to the uniform which
+    /// can be accessed from the shader's source. The value for
+    /// `uniform_location` should be retrieved from the string name of the
+    /// uniform by calling `Pipeline::get_uniform_location`.
+    ///
+    /// This function can be used to set any integer type uniform,
+    /// including int arrays and int vectors. For example, to set a single
+    /// ivec4 uniform you would use 4 for `n_components` and 1 for
+    /// `count`. To set an array of 8 int values, you could use 1 for
+    /// `n_components` and 8 for `count`.
+    ///
+    /// ## `uniform_location`
+    /// The uniform's location identifier
+    /// ## `n_components`
+    /// The number of components in the corresponding uniform's type
+    /// ## `count`
+    /// The number of values to set
+    /// ## `value`
+    /// Pointer to the new values to set
+    pub fn set_uniform_int(
+        &self,
+        uniform_location: i32,
+        n_components: i32,
+        count: i32,
+        value: &[i32],
+    ) {
+        unsafe {
+            ffi::cogl_pipeline_set_uniform_int(
+                self.to_glib_none().0,
+                uniform_location,
+                n_components,
+                count,
+                value.as_ptr(),
+            );
+        }
+    }
 
-    //TODO:
-    // /// Sets new values for the uniform at `uniform_location`. If this
-    // /// pipeline has a user program attached and is later used as a source
-    // /// for drawing, the given values will be assigned to the uniform which
-    // /// can be accessed from the shader's source. The value for
-    // /// `uniform_location` should be retrieved from the string name of the
-    // /// uniform by calling `Pipeline::get_uniform_location`.
-    // ///
-    // /// This function can be used to set any matrix type uniform, including
-    // /// matrix arrays. For example, to set a single mat4 uniform you would
-    // /// use 4 for `dimensions` and 1 for `count`. To set an array of 8
-    // /// mat3 values, you could use 3 for `dimensions` and 8 for `count`.
-    // ///
-    // /// If `transpose` is `false` then the matrix is expected to be in
-    // /// column-major order or if it is `true` then the matrix is in
-    // /// row-major order. You can pass a `Matrix` by calling by passing
-    // /// the result of `Matrix::get_array` in `value` and setting
-    // /// `transpose` to `false`.
-    // ///
-    // /// ## `uniform_location`
-    // /// The uniform's location identifier
-    // /// ## `dimensions`
-    // /// The size of the matrix
-    // /// ## `count`
-    // /// The number of values to set
-    // /// ## `transpose`
-    // /// Whether to transpose the matrix
-    // /// ## `value`
-    // /// Pointer to the new values to set
-    // pub fn set_uniform_matrix(
-    //     &self,
-    //     uniform_location: i32,
-    //     dimensions: i32,
-    //     count: i32,
-    //     transpose: Bool,
-    //     value: f32,
-    // ) {
-    //     // unsafe {
-    //     //     ffi::cogl_pipeline_set_uniform_matrix(
-    //     //         self.to_glib_none().0,
-    //     //         uniform_location,
-    //     //         dimensions,
-    //     //         count,
-    //     //         transpose,
-    //     //         value,
-    //     //     );
-    //     // }
-    // }
+    /// Sets new values for the uniform at `uniform_location`. If this
+    /// pipeline has a user program attached and is later used as a source
+    /// for drawing, the given values will be assigned to the uniform which
+    /// can be accessed from the shader's source. The value for
+    /// `uniform_location` should be retrieved from the string name of the
+    /// uniform by calling `Pipeline::get_uniform_location`.
+    ///
+    /// This function can be used to set any matrix type uniform, including
+    /// matrix arrays. For example, to set a single mat4 uniform you would
+    /// use 4 for `dimensions` and 1 for `count`. To set an array of 8
+    /// mat3 values, you could use 3 for `dimensions` and 8 for `count`.
+    ///
+    /// If `transpose` is `false` then the matrix is expected to be in
+    /// column-major order or if it is `true` then the matrix is in
+    /// row-major order. You can pass a `Matrix` by calling by passing
+    /// the result of `Matrix::get_array` in `value` and setting
+    /// `transpose` to `false`.
+    ///
+    /// ## `uniform_location`
+    /// The uniform's location identifier
+    /// ## `dimensions`
+    /// The size of the matrix
+    /// ## `count`
+    /// The number of values to set
+    /// ## `transpose`
+    /// Whether to transpose the matrix
+    /// ## `value`
+    /// Pointer to the new values to set
+    pub fn set_uniform_matrix(
+        &self,
+        uniform_location: i32,
+        dimensions: i32,
+        count: i32,
+        transpose: bool,
+        value: &[f32],
+    ) {
+        unsafe {
+            ffi::cogl_pipeline_set_uniform_matrix(
+                self.to_glib_none().0,
+                uniform_location,
+                dimensions,
+                count,
+                transpose as i32,
+                value.as_ptr(),
+            );
+        }
+    }
 
     //pub fn set_user_program(&self, program: /*Unimplemented*/Handle) {
     //    unsafe { TODO: call cogl_sys:cogl_pipeline_set_user_program() }

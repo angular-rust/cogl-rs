@@ -1,4 +1,3 @@
-use ffi;
 use glib::object::IsA;
 use glib::translate::*;
 use std::fmt;
