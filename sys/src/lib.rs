@@ -326,7 +326,22 @@ pub const COGL_AFIRST_BIT: c_int = 64;
 pub const COGL_A_BIT: c_int = 16;
 pub const COGL_BGR_BIT: c_int = 32;
 pub const COGL_DEPTH_BIT: c_int = 256;
+pub const COGL_FIXED_0_5: c_int = 32768;
+pub const COGL_FIXED_1: c_int = 1;
+pub const COGL_FIXED_2_PI: c_int = 411775;
+pub const COGL_FIXED_BITS: c_int = 32;
+pub const COGL_FIXED_EPSILON: c_int = 1;
+pub const COGL_FIXED_MAX: c_int = 2147483647;
+pub const COGL_FIXED_MIN: c_int = -2147483648;
+pub const COGL_FIXED_PI: c_int = 205887;
+pub const COGL_FIXED_PI_2: c_int = 102944;
+pub const COGL_FIXED_PI_4: c_int = 51472;
+pub const COGL_FIXED_Q: c_int = -16;
 pub const COGL_PREMULT_BIT: c_int = 128;
+pub const COGL_RADIANS_TO_DEGREES: c_int = 3754936;
+pub const COGL_SQRTI_ARG_10_PERCENT: c_int = 5590;
+pub const COGL_SQRTI_ARG_5_PERCENT: c_int = 210;
+pub const COGL_SQRTI_ARG_MAX: c_int = 4194303;
 pub const COGL_STENCIL_BIT: c_int = 512;
 pub const COGL_TEXTURE_MAX_WASTE: c_int = 127;
 pub const COGL_VERSION_COMPONENT_BITS: c_int = 10;
@@ -414,6 +429,7 @@ pub type CoglOutputCallback = Option<unsafe extern "C" fn(*mut CoglOutput, *mut 
 pub type CoglPipelineLayerCallback = Option<unsafe extern "C" fn(*mut CoglPipeline, c_int, *mut c_void) -> CoglBool>;
 pub type CoglPrimitiveAttributeCallback = Option<unsafe extern "C" fn(*mut CoglPrimitive, *mut CoglAttribute, *mut c_void) -> CoglBool>;
 pub type CoglSwapBuffersNotify = Option<unsafe extern "C" fn(*mut CoglFramebuffer, *mut c_void)>;
+// pub type CoglXlibFilterFunc = Option<unsafe extern "C" fn(*mut XEvent, *mut c_void) -> CoglFilterReturn>;
 
 // Records
 #[repr(C)]
@@ -574,6 +590,16 @@ impl ::std::fmt::Debug for CoglKmsCrtc {
 }
 
 #[repr(C)]
+pub struct _CoglMaterial(c_void);
+
+pub type CoglMaterial = *mut _CoglMaterial;
+
+#[repr(C)]
+pub struct _CoglMaterialLayer(c_void);
+
+pub type CoglMaterialLayer = *mut _CoglMaterialLayer;
+
+#[repr(C)]
 #[derive(Copy, Clone)]
 pub struct CoglMatrix {
     pub xx: c_float,
@@ -627,6 +653,16 @@ pub struct CoglMatrixEntry(c_void);
 impl ::std::fmt::Debug for CoglMatrixEntry {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         f.debug_struct(&format!("CoglMatrixEntry @ {:?}", self as *const _))
+         .finish()
+    }
+}
+
+#[repr(C)]
+pub struct CoglOffscreen(c_void);
+
+impl ::std::fmt::Debug for CoglOffscreen {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        f.debug_struct(&format!("CoglOffscreen @ {:?}", self as *const _))
          .finish()
     }
 }
@@ -1521,6 +1557,64 @@ extern "C" {
     pub fn cogl_frame_closure_get_gtype() -> GType;
 
     //=========================================================================
+    // CoglMaterial
+    //=========================================================================
+    pub fn cogl_material_copy(source: *mut CoglMaterial) -> *mut CoglMaterial;
+    pub fn cogl_material_get_ambient(material: *mut CoglMaterial, ambient: *mut CoglColor);
+    pub fn cogl_material_get_color(material: *mut CoglMaterial, color: *mut CoglColor);
+    pub fn cogl_material_get_diffuse(material: *mut CoglMaterial, diffuse: *mut CoglColor);
+    pub fn cogl_material_get_emission(material: *mut CoglMaterial, emission: *mut CoglColor);
+    pub fn cogl_material_get_layer_point_sprite_coords_enabled(material: *mut CoglMaterial, layer_index: c_int) -> CoglBool;
+    pub fn cogl_material_get_layer_wrap_mode_p(material: *mut CoglMaterial, layer_index: c_int) -> CoglMaterialWrapMode;
+    pub fn cogl_material_get_layer_wrap_mode_s(material: *mut CoglMaterial, layer_index: c_int) -> CoglMaterialWrapMode;
+    pub fn cogl_material_get_layer_wrap_mode_t(material: *mut CoglMaterial, layer_index: c_int) -> CoglMaterialWrapMode;
+    pub fn cogl_material_get_layers(material: *mut CoglMaterial) -> *const glib::GList;
+    pub fn cogl_material_get_n_layers(material: *mut CoglMaterial) -> c_int;
+    pub fn cogl_material_get_point_size(material: *mut CoglMaterial) -> c_float;
+    pub fn cogl_material_get_shininess(material: *mut CoglMaterial) -> c_float;
+    pub fn cogl_material_get_specular(material: *mut CoglMaterial, specular: *mut CoglColor);
+    pub fn cogl_material_get_user_program(material: *mut CoglMaterial) -> CoglHandle;
+    pub fn cogl_material_remove_layer(material: *mut CoglMaterial, layer_index: c_int);
+    pub fn cogl_material_set_alpha_test_function(material: *mut CoglMaterial, alpha_func: CoglMaterialAlphaFunc, alpha_reference: c_float);
+    pub fn cogl_material_set_ambient(material: *mut CoglMaterial, ambient: *const CoglColor);
+    pub fn cogl_material_set_ambient_and_diffuse(material: *mut CoglMaterial, color: *const CoglColor);
+    pub fn cogl_material_set_blend(material: *mut CoglMaterial, blend_string: *const c_char, error: *mut *mut glib::GError) -> CoglBool;
+    pub fn cogl_material_set_blend_constant(material: *mut CoglMaterial, constant_color: *const CoglColor);
+    pub fn cogl_material_set_color(material: *mut CoglMaterial, color: *const CoglColor);
+    pub fn cogl_material_set_color4f(material: *mut CoglMaterial, red: c_float, green: c_float, blue: c_float, alpha: c_float);
+    pub fn cogl_material_set_color4ub(material: *mut CoglMaterial, red: u8, green: u8, blue: u8, alpha: u8);
+    pub fn cogl_material_set_diffuse(material: *mut CoglMaterial, diffuse: *const CoglColor);
+    pub fn cogl_material_set_emission(material: *mut CoglMaterial, emission: *const CoglColor);
+    pub fn cogl_material_set_layer(material: *mut CoglMaterial, layer_index: c_int, texture: CoglHandle);
+    pub fn cogl_material_set_layer_combine(material: *mut CoglMaterial, layer_index: c_int, blend_string: *const c_char, error: *mut *mut glib::GError) -> CoglBool;
+    pub fn cogl_material_set_layer_combine_constant(material: *mut CoglMaterial, layer_index: c_int, constant: *const CoglColor);
+    pub fn cogl_material_set_layer_filters(material: *mut CoglMaterial, layer_index: c_int, min_filter: CoglMaterialFilter, mag_filter: CoglMaterialFilter);
+    pub fn cogl_material_set_layer_matrix(material: *mut CoglMaterial, layer_index: c_int, matrix: *const CoglMatrix);
+    pub fn cogl_material_set_layer_point_sprite_coords_enabled(material: *mut CoglMaterial, layer_index: c_int, enable: CoglBool, error: *mut *mut glib::GError) -> CoglBool;
+    pub fn cogl_material_set_layer_wrap_mode(material: *mut CoglMaterial, layer_index: c_int, mode: CoglMaterialWrapMode);
+    pub fn cogl_material_set_layer_wrap_mode_p(material: *mut CoglMaterial, layer_index: c_int, mode: CoglMaterialWrapMode);
+    pub fn cogl_material_set_layer_wrap_mode_s(material: *mut CoglMaterial, layer_index: c_int, mode: CoglMaterialWrapMode);
+    pub fn cogl_material_set_layer_wrap_mode_t(material: *mut CoglMaterial, layer_index: c_int, mode: CoglMaterialWrapMode);
+    pub fn cogl_material_set_point_size(material: *mut CoglMaterial, point_size: c_float);
+    pub fn cogl_material_set_shininess(material: *mut CoglMaterial, shininess: c_float);
+    pub fn cogl_material_set_specular(material: *mut CoglMaterial, specular: *const CoglColor);
+    pub fn cogl_material_set_user_program(material: *mut CoglMaterial, program: CoglHandle);
+    pub fn cogl_material_new() -> *mut CoglMaterial;
+    pub fn cogl_material_ref(material: CoglHandle) -> CoglHandle;
+    pub fn cogl_material_unref(material: CoglHandle);
+
+    //=========================================================================
+    // CoglMaterialLayer
+    //=========================================================================
+    pub fn cogl_material_layer_get_mag_filter(layer: *mut CoglMaterialLayer) -> CoglMaterialFilter;
+    pub fn cogl_material_layer_get_min_filter(layer: *mut CoglMaterialLayer) -> CoglMaterialFilter;
+    pub fn cogl_material_layer_get_texture(layer: *mut CoglMaterialLayer) -> CoglHandle;
+    pub fn cogl_material_layer_get_type(layer: *mut CoglMaterialLayer) -> CoglMaterialLayerType;
+    pub fn cogl_material_layer_get_wrap_mode_p(layer: *mut CoglMaterialLayer) -> CoglMaterialWrapMode;
+    pub fn cogl_material_layer_get_wrap_mode_s(layer: *mut CoglMaterialLayer) -> CoglMaterialWrapMode;
+    pub fn cogl_material_layer_get_wrap_mode_t(layer: *mut CoglMaterialLayer) -> CoglMaterialWrapMode;
+
+    //=========================================================================
     // CoglMatrix
     //=========================================================================
     pub fn cogl_matrix_get_gtype() -> GType;
@@ -1674,6 +1768,15 @@ extern "C" {
     // CoglFixed
     //=========================================================================
     pub fn cogl_fixed_get_type() -> GType;
+    pub fn cogl_fixed_log2(x: c_uint) -> CoglFixed;
+    pub fn cogl_fixed_pow(x: c_uint, y: CoglFixed) -> c_uint;
+    pub fn cogl_fixed_atan(a: CoglFixed) -> CoglFixed;
+    pub fn cogl_fixed_atan2(a: CoglFixed, b: CoglFixed) -> CoglFixed;
+    pub fn cogl_fixed_cos(angle: CoglFixed) -> CoglFixed;
+    pub fn cogl_fixed_pow2(x: CoglFixed) -> c_uint;
+    pub fn cogl_fixed_sin(angle: CoglFixed) -> CoglFixed;
+    pub fn cogl_fixed_sqrt(x: CoglFixed) -> CoglFixed;
+    pub fn cogl_fixed_tan(angle: CoglFixed) -> CoglFixed;
 
     //=========================================================================
     // CoglFrameInfo
@@ -1740,6 +1843,15 @@ extern "C" {
     pub fn cogl_object_value_set_object(value: *mut gobject::GValue, object: gpointer);
     pub fn cogl_object_get_user_data(object: *mut CoglObject, key: *mut CoglUserDataKey) -> *mut c_void;
     pub fn cogl_object_set_user_data(object: *mut CoglObject, key: *mut CoglUserDataKey, user_data: *mut c_void, destroy: CoglUserDataDestroyCallback);
+
+    //=========================================================================
+    // CoglOffscreen
+    //=========================================================================
+    pub fn cogl_offscreen_get_gtype() -> GType;
+    pub fn cogl_offscreen_new_to_texture(texture: *mut CoglTexture) -> *mut CoglOffscreen;
+    pub fn cogl_offscreen_new_with_texture(texture: *mut CoglTexture) -> *mut CoglOffscreen;
+    pub fn cogl_offscreen_ref(offscreen: *mut c_void) -> *mut c_void;
+    pub fn cogl_offscreen_unref(offscreen: *mut c_void);
 
     //=========================================================================
     // CoglOnscreen
@@ -2077,10 +2189,16 @@ extern "C" {
     pub fn cogl_texture_set_premultiplied(texture: *mut CoglTexture, premultiplied: CoglBool);
     pub fn cogl_texture_set_region(texture: *mut CoglTexture, src_x: c_int, src_y: c_int, dst_x: c_int, dst_y: c_int, dst_width: c_uint, dst_height: c_uint, width: c_int, height: c_int, format: CoglPixelFormat, rowstride: c_uint, data: *const u8) -> CoglBool;
     pub fn cogl_texture_set_region_from_bitmap(texture: *mut CoglTexture, src_x: c_int, src_y: c_int, dst_x: c_int, dst_y: c_int, dst_width: c_uint, dst_height: c_uint, bitmap: *mut CoglBitmap) -> CoglBool;
+    pub fn cogl_texture_ref(texture: *mut c_void) -> *mut c_void;
+    pub fn cogl_texture_unref(texture: *mut c_void);
 
     //=========================================================================
     // Other functions
     //=========================================================================
+    pub fn cogl_angle_cos(angle: CoglAngle) -> CoglFixed;
+    pub fn cogl_angle_sin(angle: CoglAngle) -> CoglFixed;
+    pub fn cogl_angle_tan(angle: CoglAngle) -> CoglFixed;
+    pub fn cogl_begin_gl();
     pub fn cogl_buffer_get_size(buffer: *mut CoglBuffer) -> c_uint;
     pub fn cogl_buffer_get_update_hint(buffer: *mut CoglBuffer) -> CoglBufferUpdateHint;
     pub fn cogl_buffer_map(buffer: *mut CoglBuffer, access: CoglBufferAccess, hints: CoglBufferMapHint) -> *mut c_void;
@@ -2088,21 +2206,56 @@ extern "C" {
     pub fn cogl_buffer_set_data(buffer: *mut CoglBuffer, offset: size_t, data: *mut c_void, size: size_t) -> CoglBool;
     pub fn cogl_buffer_set_update_hint(buffer: *mut CoglBuffer, hint: CoglBufferUpdateHint);
     pub fn cogl_buffer_unmap(buffer: *mut CoglBuffer);
+    pub fn cogl_check_extension(name: *const c_char, ext: *const c_char) -> CoglBool;
+    pub fn cogl_clear(color: *const CoglColor, buffers: c_ulong);
+    pub fn cogl_clip_ensure();
+    pub fn cogl_clip_pop();
+    pub fn cogl_clip_push(x_offset: c_float, y_offset: c_float, width: c_float, height: c_float);
+    pub fn cogl_clip_push_primitive(primitive: *mut c_void, bounds_x1: c_float, bounds_y1: c_float, bounds_x2: c_float, bounds_y2: c_float);
+    pub fn cogl_clip_push_rectangle(x0: c_float, y0: c_float, x1: c_float, y1: c_float);
+    pub fn cogl_clip_push_window_rect(x_offset: c_float, y_offset: c_float, width: c_float, height: c_float);
+    pub fn cogl_clip_push_window_rectangle(x_offset: c_int, y_offset: c_int, width: c_int, height: c_int);
+    pub fn cogl_clip_stack_restore();
+    pub fn cogl_clip_stack_save();
+    pub fn cogl_clutter_check_extension_CLUTTER(name: *const c_char, ext: *const c_char) -> CoglBool;
+    pub fn cogl_clutter_winsys_has_feature_CLUTTER(feature: CoglWinsysFeature) -> CoglBool;
+    pub fn cogl_clutter_winsys_xlib_get_visual_info_CLUTTER();
+    pub fn cogl_create_program() -> CoglHandle;
+    pub fn cogl_create_shader(shader_type: CoglShaderType) -> CoglHandle;
     pub fn cogl_debug_matrix_entry_print(entry: *mut CoglMatrixEntry);
     pub fn cogl_debug_matrix_print(matrix: *const CoglMatrix);
     pub fn cogl_debug_object_foreach_type(func: CoglDebugObjectForeachTypeCallback, user_data: *mut c_void);
     pub fn cogl_debug_object_print_instances();
+    pub fn cogl_disable_fog();
+    pub fn cogl_double_to_fixed(value: c_double) -> CoglFixed;
+    pub fn cogl_double_to_int(value: c_double) -> c_int;
+    pub fn cogl_double_to_uint(value: c_double) -> c_uint;
     pub fn cogl_egl_context_get_egl_context(context: *mut CoglContext);
     pub fn cogl_egl_context_get_egl_display(context: *mut CoglContext);
+    pub fn cogl_end_gl();
     pub fn cogl_error_copy(error: *mut glib::GError) -> *mut glib::GError;
     pub fn cogl_error_free(error: *mut glib::GError);
     pub fn cogl_error_matches(error: *mut glib::GError, domain: u32, code: c_int) -> CoglBool;
+    pub fn cogl_features_available(features: CoglFeatureFlags) -> CoglBool;
+    pub fn cogl_flush();
     pub fn cogl_foreach_feature(context: *mut CoglContext, callback: CoglFeatureCallback, user_data: *mut c_void);
+    pub fn cogl_framebuffer_get_color_format(framebuffer: *mut c_void) -> CoglPixelFormat;
+    pub fn cogl_frustum(left: c_float, right: c_float, bottom: c_float, top: c_float, z_near: c_float, z_far: c_float);
+    pub fn cogl_get_backface_culling_enabled() -> CoglBool;
+    pub fn cogl_get_bitmasks(red: *mut c_int, green: *mut c_int, blue: *mut c_int, alpha: *mut c_int);
     pub fn cogl_get_clock_time(context: *mut CoglContext) -> i64;
+    pub fn cogl_get_depth_test_enabled() -> CoglBool;
     pub fn cogl_get_draw_framebuffer() -> *mut CoglFramebuffer;
+    pub fn cogl_get_features() -> CoglFeatureFlags;
+    pub fn cogl_get_modelview_matrix(matrix: *mut CoglMatrix);
+    pub fn cogl_get_option_group() -> *mut glib::GOptionGroup;
+    pub fn cogl_get_proc_address(name: *const c_char) -> CoglFuncPtr;
+    pub fn cogl_get_projection_matrix(matrix: *mut CoglMatrix);
     pub fn cogl_get_rectangle_indices(context: *mut CoglContext, n_rectangles: c_int) -> *mut CoglIndices;
+    pub fn cogl_get_source() -> *mut c_void;
     pub fn cogl_get_static_identity_quaternion() -> *const CoglQuaternion;
     pub fn cogl_get_static_zero_quaternion() -> *const CoglQuaternion;
+    pub fn cogl_get_viewport(v: *mut [c_float; 4]);
     //pub fn cogl_gles2_get_current_vtable() -> /*Ignored*/*mut CoglGLES2Vtable;
     pub fn cogl_gles2_texture_2d_new_from_handle(ctx: *mut CoglContext, gles2_ctx: *mut CoglGLES2Context, handle: c_uint, width: c_int, height: c_int, format: CoglPixelFormat) -> *mut CoglTexture2D;
     pub fn cogl_gles2_texture_get_handle(texture: *mut CoglTexture, handle: *mut c_uint, target: *mut c_uint) -> CoglBool;
@@ -2128,6 +2281,8 @@ extern "C" {
     pub fn cogl_is_index_buffer(object: *mut c_void) -> CoglBool;
     pub fn cogl_is_indices(object: *mut c_void) -> CoglBool;
     pub fn cogl_is_matrix_stack(object: *mut c_void) -> CoglBool;
+    pub fn cogl_is_material(handle: CoglHandle) -> CoglBool;
+    pub fn cogl_is_offscreen(object: *mut c_void) -> CoglBool;
     pub fn cogl_is_onscreen(object: *mut c_void) -> CoglBool;
     pub fn cogl_is_onscreen_template(object: *mut c_void) -> CoglBool;
     pub fn cogl_is_output(object: *mut c_void) -> CoglBool;
@@ -2135,7 +2290,9 @@ extern "C" {
     pub fn cogl_is_pixel_buffer(object: *mut c_void) -> CoglBool;
     pub fn cogl_is_primitive(object: *mut c_void) -> CoglBool;
     pub fn cogl_is_primitive_texture(object: *mut c_void) -> CoglBool;
+    pub fn cogl_is_program(handle: CoglHandle) -> CoglBool;
     pub fn cogl_is_renderer(object: *mut c_void) -> CoglBool;
+    pub fn cogl_is_shader(handle: CoglHandle) -> CoglBool;
     pub fn cogl_is_snippet(object: *mut c_void) -> CoglBool;
     pub fn cogl_is_sub_texture(object: *mut c_void) -> CoglBool;
     pub fn cogl_is_swap_chain(object: *mut c_void) -> CoglBool;
@@ -2145,6 +2302,8 @@ extern "C" {
     pub fn cogl_is_texture_3d(object: *mut c_void) -> CoglBool;
     pub fn cogl_is_texture_pixmap_x11(object: *mut c_void) -> CoglBool;
     pub fn cogl_is_texture_rectangle(object: *mut c_void) -> CoglBool;
+    pub fn cogl_is_vertex_buffer(handle: CoglHandle) -> CoglBool;
+    pub fn cogl_is_vertex_buffer_indices(handle: CoglHandle) -> CoglBool;
     pub fn cogl_kms_display_queue_modes_reset(display: *mut CoglDisplay);
     pub fn cogl_kms_display_set_ignore_crtc(display: *mut CoglDisplay, id: u32, ignore: CoglBool);
     pub fn cogl_kms_display_set_layout(display: *mut CoglDisplay, width: c_int, height: c_int, crtcs: *mut *mut CoglKmsCrtc, n_crtcs: c_int, error: *mut *mut glib::GError) -> CoglBool;
@@ -2155,10 +2314,69 @@ extern "C" {
     pub fn cogl_kms_renderer_get_kms_fd(renderer: *mut CoglRenderer) -> c_int;
     pub fn cogl_kms_renderer_set_kms_fd(renderer: *mut CoglRenderer, fd: c_int);
     pub fn cogl_meta_texture_foreach_in_region(meta_texture: *mut CoglMetaTexture, tx_1: c_float, ty_1: c_float, tx_2: c_float, ty_2: c_float, wrap_s: CoglPipelineWrapMode, wrap_t: CoglPipelineWrapMode, callback: CoglMetaTextureCallback, user_data: *mut c_void);
+    pub fn cogl_onscreen_clutter_backend_set_size_CLUTTER(width: c_int, height: c_int);
+    pub fn cogl_ortho(left: c_float, right: c_float, bottom: c_float, top: c_float, near: c_float, far: c_float);
+    pub fn cogl_perspective(fovy: c_float, aspect: c_float, z_near: c_float, z_far: c_float);
     pub fn cogl_poll_renderer_dispatch(renderer: *mut CoglRenderer, poll_fds: *const CoglPollFD, n_poll_fds: c_int);
     pub fn cogl_poll_renderer_get_info(renderer: *mut CoglRenderer, poll_fds: *mut *mut CoglPollFD, n_poll_fds: *mut c_int, timeout: *mut i64) -> c_int;
+    pub fn cogl_polygon(vertices: *const CoglTextureVertex, n_vertices: c_uint, use_color: CoglBool);
+    pub fn cogl_pop_draw_buffer();
     pub fn cogl_pop_gles2_context(ctx: *mut CoglContext);
+    pub fn cogl_pop_framebuffer();
+    pub fn cogl_pop_matrix();
+    pub fn cogl_pop_source();
+    pub fn cogl_program_attach_shader(program_handle: CoglHandle, shader_handle: CoglHandle);
+    pub fn cogl_program_get_uniform_location(handle: CoglHandle, uniform_name: *const c_char) -> c_int;
+    pub fn cogl_program_link(handle: CoglHandle);
+    pub fn cogl_program_ref(handle: CoglHandle) -> CoglHandle;
+    pub fn cogl_program_set_uniform_1f(program: CoglHandle, uniform_location: c_int, value: c_float);
+    pub fn cogl_program_set_uniform_1i(program: CoglHandle, uniform_location: c_int, value: c_int);
+    pub fn cogl_program_set_uniform_float(program: CoglHandle, uniform_location: c_int, n_components: c_int, count: c_int, value: *const c_float);
+    pub fn cogl_program_set_uniform_int(program: CoglHandle, uniform_location: c_int, n_components: c_int, count: c_int, value: *const c_int);
+    pub fn cogl_program_set_uniform_matrix(program: CoglHandle, uniform_location: c_int, dimensions: c_int, count: c_int, transpose: CoglBool, value: *const c_float);
+    pub fn cogl_program_uniform_1f(uniform_no: c_int, value: c_float);
+    pub fn cogl_program_uniform_1i(uniform_no: c_int, value: c_int);
+    pub fn cogl_program_uniform_float(uniform_no: c_int, size: c_int, count: c_int, value: *const c_float);
+    pub fn cogl_program_uniform_int(uniform_no: c_int, size: c_int, count: c_int, value: *const c_int);
+    pub fn cogl_program_uniform_matrix(uniform_no: c_int, size: c_int, count: c_int, transpose: CoglBool, value: *const c_float);
+    pub fn cogl_program_unref(handle: CoglHandle);
+    pub fn cogl_program_use(handle: CoglHandle);
+    pub fn cogl_push_draw_buffer();
+    pub fn cogl_push_framebuffer(buffer: *mut c_void);
     pub fn cogl_push_gles2_context(ctx: *mut CoglContext, gles2_ctx: *mut CoglGLES2Context, read_buffer: *mut CoglFramebuffer, write_buffer: *mut CoglFramebuffer, error: *mut *mut glib::GError) -> CoglBool;
+    pub fn cogl_push_matrix();
+    pub fn cogl_push_source(material: *mut c_void);
+    pub fn cogl_read_pixels(x: c_int, y: c_int, width: c_int, height: c_int, source: CoglReadPixelsFlags, format: CoglPixelFormat, pixels: *mut u8);
+    pub fn cogl_rectangle(x_1: c_float, y_1: c_float, x_2: c_float, y_2: c_float);
+    pub fn cogl_rectangle_with_multitexture_coords(x1: c_float, y1: c_float, x2: c_float, y2: c_float, tex_coords: *const c_float, tex_coords_len: c_int);
+    pub fn cogl_rectangle_with_texture_coords(x1: c_float, y1: c_float, x2: c_float, y2: c_float, tx1: c_float, ty1: c_float, tx2: c_float, ty2: c_float);
+    pub fn cogl_rectangles(verts: *const c_float, n_rects: c_uint);
+    pub fn cogl_rectangles_with_texture_coords(verts: *const c_float, n_rects: c_uint);
+    pub fn cogl_rotate(angle: c_float, x: c_float, y: c_float, z: c_float);
+    pub fn cogl_scale(x: c_float, y: c_float, z: c_float);
+    pub fn cogl_set_backface_culling_enabled(setting: CoglBool);
+    pub fn cogl_set_depth_test_enabled(setting: CoglBool);
+    pub fn cogl_set_draw_buffer(target: CoglBufferTarget, offscreen: CoglHandle);
+    pub fn cogl_set_fog(fog_color: *const CoglColor, mode: CoglFogMode, density: c_float, z_near: c_float, z_far: c_float);
+    pub fn cogl_set_framebuffer(buffer: *mut c_void);
+    pub fn cogl_set_modelview_matrix(matrix: *mut CoglMatrix);
+    pub fn cogl_set_projection_matrix(matrix: *mut CoglMatrix);
+    pub fn cogl_set_source(material: *mut c_void);
+    pub fn cogl_set_source_color(color: *const CoglColor);
+    pub fn cogl_set_source_color4f(red: c_float, green: c_float, blue: c_float, alpha: c_float);
+    pub fn cogl_set_source_color4ub(red: u8, green: u8, blue: u8, alpha: u8);
+    pub fn cogl_set_source_texture(texture: *mut CoglTexture);
+    pub fn cogl_set_viewport(x: c_int, y: c_int, width: c_int, height: c_int);
+    pub fn cogl_shader_compile(handle: CoglHandle);
+    pub fn cogl_shader_get_info_log(handle: CoglHandle) -> *mut c_char;
+    pub fn cogl_shader_get_type(handle: CoglHandle) -> CoglShaderType;
+    pub fn cogl_shader_is_compiled(handle: CoglHandle) -> CoglBool;
+    pub fn cogl_shader_ref(handle: CoglHandle) -> CoglHandle;
+    pub fn cogl_shader_source(shader: CoglHandle, source: *const c_char);
+    pub fn cogl_shader_unref(handle: CoglHandle);
+    pub fn cogl_sqrti(x: c_int) -> c_int;
+    pub fn cogl_transform(matrix: *const CoglMatrix);
+    pub fn cogl_translate(x: c_float, y: c_float, z: c_float);
     pub fn cogl_vector3_add(result: *mut c_float, a: *const c_float, b: *const c_float);
     pub fn cogl_vector3_copy(vector: *const c_float) -> *mut c_float;
     pub fn cogl_vector3_cross_product(result: *mut c_float, u: *const c_float, v: *const c_float);
@@ -2175,6 +2393,21 @@ extern "C" {
     pub fn cogl_vector3_multiply_scalar(vector: *mut c_float, scalar: c_float);
     pub fn cogl_vector3_normalize(vector: *mut c_float);
     pub fn cogl_vector3_subtract(result: *mut c_float, a: *const c_float, b: *const c_float);
+    pub fn cogl_vertex_buffer_add(handle: CoglHandle, attribute_name: *const c_char, n_components: u8, type_: CoglAttributeType, normalized: CoglBool, stride: u16, pointer: *mut c_void);
+    pub fn cogl_vertex_buffer_delete(handle: CoglHandle, attribute_name: *const c_char);
+    pub fn cogl_vertex_buffer_disable(handle: CoglHandle, attribute_name: *const c_char);
+    pub fn cogl_vertex_buffer_draw(handle: CoglHandle, mode: CoglVerticesMode, first: c_int, count: c_int);
+    pub fn cogl_vertex_buffer_draw_elements(handle: CoglHandle, mode: CoglVerticesMode, indices: CoglHandle, min_index: c_int, max_index: c_int, indices_offset: c_int, count: c_int);
+    pub fn cogl_vertex_buffer_enable(handle: CoglHandle, attribute_name: *const c_char);
+    pub fn cogl_vertex_buffer_get_n_vertices(handle: CoglHandle) -> c_uint;
+    pub fn cogl_vertex_buffer_indices_get_for_quads(n_indices: c_uint) -> CoglHandle;
+    pub fn cogl_vertex_buffer_indices_get_type(indices: CoglHandle) -> CoglIndicesType;
+    pub fn cogl_vertex_buffer_indices_new(indices_type: CoglIndicesType, indices_array: *mut c_void, indices_len: c_int) -> CoglHandle;
+    pub fn cogl_vertex_buffer_new(n_vertices: c_uint) -> CoglHandle;
+    pub fn cogl_vertex_buffer_ref(handle: CoglHandle) -> CoglHandle;
+    pub fn cogl_vertex_buffer_submit(handle: CoglHandle);
+    pub fn cogl_vertex_buffer_unref(handle: CoglHandle);
+    pub fn cogl_viewport(width: c_uint, height: c_uint);
 
     // FIXME:
     // pub fn cogl_wayland_display_set_compositor_display(display: *mut CoglDisplay, wayland_display: *mut wl_display);
@@ -2194,5 +2427,12 @@ extern "C" {
     pub fn cogl_xlib_get_display();
     pub fn cogl_xlib_handle_event(xevent: *mut c_void) -> CoglFilterReturn;
     pub fn cogl_xlib_set_display(display: *mut c_void);
-
+    // pub fn cogl_xlib_renderer_add_filter(renderer: *mut c_void, func: CoglXlibFilterFunc, data: *mut c_void);
+    pub fn cogl_xlib_renderer_get_display(renderer: *mut c_void);
+    pub fn cogl_xlib_renderer_get_foreign_display(renderer: *mut c_void);
+    pub fn cogl_xlib_renderer_get_visual_info(renderer: *mut c_void);
+    pub fn cogl_xlib_renderer_handle_event(renderer: *mut c_void, event: *mut c_void) -> CoglFilterReturn;
+    // pub fn cogl_xlib_renderer_remove_filter(renderer: *mut c_void, func: CoglXlibFilterFunc, data: *mut c_void);
+    pub fn cogl_xlib_renderer_set_event_retrieval_enabled(renderer: *mut c_void, enable: CoglBool);
+    pub fn cogl_xlib_renderer_set_foreign_display(renderer: *mut c_void, display: *mut c_void);
 }

@@ -42,6 +42,9 @@ mod object;
 pub use self::object::ObjectExt;
 pub use self::object::{Object, ObjectClass, NONE_OBJECT};
 
+mod offscreen;
+pub use self::offscreen::{Offscreen, OffscreenClass};
+
 mod onscreen;
 pub use self::onscreen::{Onscreen, OnscreenClass};
 

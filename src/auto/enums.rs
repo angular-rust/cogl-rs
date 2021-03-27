@@ -1233,16 +1233,34 @@ impl SetValue for IndicesType {
     }
 }
 
+/// Alpha testing happens before blending primitives with the framebuffer and
+/// gives an opportunity to discard fragments based on a comparison with the
+/// incoming alpha value and a reference alpha value. The `MaterialAlphaFunc`
+/// determines how the comparison is done.
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 pub enum MaterialAlphaFunc {
+    /// Never let the fragment through.
     Never,
+    /// Let the fragment through if the incoming
+    ///  alpha value is less than the reference alpha value
     Less,
+    /// Let the fragment through if the incoming
+    ///  alpha value equals the reference alpha value
     Equal,
+    /// Let the fragment through if the incoming
+    ///  alpha value is less than or equal to the reference alpha value
     Lequal,
+    /// Let the fragment through if the incoming
+    ///  alpha value is greater than the reference alpha value
     Greater,
+    /// Let the fragment through if the incoming
+    ///  alpha value does not equal the reference alpha value
     Notequal,
+    /// Let the fragment through if the incoming
+    ///  alpha value is greater than or equal to the reference alpha value.
     Gequal,
+    /// Always let the fragment through.
     Always,
     #[doc(hidden)]
     __Unknown(i32),
@@ -1328,14 +1346,37 @@ impl SetValue for MaterialAlphaFunc {
     }
 }
 
+/// Texture filtering is used whenever the current pixel maps either to more
+/// than one texture element (texel) or less than one. These filter enums
+/// correspond to different strategies used to come up with a pixel color, by
+/// possibly referring to multiple neighbouring texels and taking a weighted
+/// average or simply using the nearest texel.
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 pub enum MaterialFilter {
+    /// Measuring in manhatten distance from the,
+    ///  current pixel center, use the nearest texture texel
     Nearest,
+    /// Use the weighted average of the 4 texels
+    ///  nearest the current pixel center
     Linear,
+    /// Select the mimap level whose
+    ///  texel size most closely matches the current pixel, and use the
+    ///  `MaterialFilter::Nearest` criterion
     NearestMipmapNearest,
+    /// Select the mimap level whose
+    ///  texel size most closely matches the current pixel, and use the
+    ///  `MaterialFilter::Linear` criterion
     LinearMipmapNearest,
+    /// Select the two mimap levels
+    ///  whose texel size most closely matches the current pixel, use
+    ///  the `MaterialFilter::Nearest` criterion on each one and take
+    ///  their weighted average
     NearestMipmapLinear,
+    /// Select the two mimap levels
+    ///  whose texel size most closely matches the current pixel, use
+    ///  the `MaterialFilter::Linear` criterion on each one and take
+    ///  their weighted average
     LinearMipmapLinear,
     #[doc(hidden)]
     __Unknown(i32),
@@ -1417,9 +1458,13 @@ impl SetValue for MaterialFilter {
     }
 }
 
+/// Available types of layers for a `Material`. This enumeration
+/// might be expanded in later versions.
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 pub enum MaterialLayerType {
+    /// The layer represents a
+    ///  <link linkend="cogl-Textures">texture`</link>`
     Texture,
     #[doc(hidden)]
     __Unknown(i32),
@@ -1484,11 +1529,33 @@ impl SetValue for MaterialLayerType {
     }
 }
 
+/// The wrap mode specifies what happens when texture coordinates
+/// outside the range 0→1 are used. Note that if the filter mode is
+/// anything but `MaterialFilter::Nearest` then texels outside the
+/// range 0→1 might be used even when the coordinate is exactly 0 or 1
+/// because OpenGL will try to sample neighbouring pixels. For example
+/// if you are trying to render the full texture then you may get
+/// artifacts around the edges when the pixels from the other side are
+/// merged in if the wrap mode is set to repeat.
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 pub enum MaterialWrapMode {
+    /// The texture will be repeated. This
+    ///  is useful for example to draw a tiled background.
     Repeat,
+    /// The coordinates outside the
+    ///  range 0→1 will sample copies of the edge pixels of the
+    ///  texture. This is useful to avoid artifacts if only one copy of
+    ///  the texture is being rendered.
     ClampToEdge,
+    /// Cogl will try to automatically
+    ///  decide which of the above two to use. For `cogl_rectangle`, it
+    ///  will use repeat mode if any of the texture coordinates are
+    ///  outside the range 0→1, otherwise it will use clamp to edge. For
+    ///  `cogl_polygon` it will always use repeat mode. For
+    ///  `cogl_vertex_buffer_draw` it will use repeat mode except for
+    ///  layers that have point sprite coordinate generation enabled. This
+    ///  is the default value.
     Automatic,
     #[doc(hidden)]
     __Unknown(i32),
@@ -2274,10 +2341,13 @@ impl SetValue for RendererError {
     }
 }
 
+/// Types of shaders
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 pub enum ShaderType {
+    /// A program for proccessing vertices
     Vertex,
+    /// A program for processing fragments
     Fragment,
     #[doc(hidden)]
     __Unknown(i32),
