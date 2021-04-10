@@ -4,9 +4,8 @@ use std::mem;
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct PollFD {
-    //TODO:
-// pub fd: c_int,
-// _truncated_record_marker: c_void,
+    pub fd: i32,
+//TODO: _truncated_record_marker: c_void,
 // // /*Ignored*/field events has incomplete type
 }
 

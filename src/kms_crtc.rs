@@ -4,12 +4,10 @@ use std::mem;
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct KmsCrtc {
-    // TODO:
-// pub id: u32,
-// pub x: u32,
-// pub y: u32,
-// _truncated_record_marker: c_void,
-// // /*Ignored*/field mode has incomplete type
+    pub id: u32,
+    pub x: u32,
+    pub y: u32,
+    // _truncated_record_marker: libc::c_void, // TODO: deal with it
 }
 
 #[doc(hidden)]

@@ -32,8 +32,17 @@ pub use gles2_vtable::GLES2Vtable;
 mod gtype_object;
 pub use gtype_object::GtypeObject;
 
+mod handle;
+pub use handle::Handle;
+
 mod kms_crtc;
 pub use kms_crtc::KmsCrtc;
+
+mod material;
+pub use material::Material;
+
+mod material_layer;
+pub use material_layer::MaterialLayer;
 
 mod onscreen_dirty_info;
 pub use onscreen_dirty_info::OnscreenDirtyInfo;

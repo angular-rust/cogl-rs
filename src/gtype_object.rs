@@ -4,9 +4,8 @@ use std::mem;
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct GtypeObject {
-    // TODO:
-// pub parent_instance: gobject::GTypeInstance,
-// pub dummy: c_uint,
+    // pub parent_instance: gobject::GTypeInstance, // TODO: deal with it
+    pub dummy: u32,
 }
 
 #[doc(hidden)]

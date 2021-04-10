@@ -1,24 +1,25 @@
+#![allow(unused_imports)]
+
 use glib::translate::*;
 use std::mem;
 
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub struct DebugObjectTypeInfo {
-    //TODO:
-// pub name: *const c_char,
-// pub instance_count: c_ulong,
+pub struct DebugObjectTypeInfo<'a> {
+    pub name: &'a str, // TODO: may be Option<String>, see gdk::WindowAttr
+    pub instance_count: u64,
 }
 
-#[doc(hidden)]
-impl Uninitialized for DebugObjectTypeInfo {
-    #[inline]
-    unsafe fn uninitialized() -> Self {
-        mem::zeroed()
-    }
-}
+// #[doc(hidden)]
+// impl<'a> Uninitialized for DebugObjectTypeInfo<'a> {
+//     #[inline]
+//     unsafe fn uninitialized() -> Self {
+//         mem::zeroed()
+//     }
+// }
 
 #[doc(hidden)]
-impl<'a> ToGlibPtr<'a, *const ffi::CoglDebugObjectTypeInfo> for DebugObjectTypeInfo {
+impl<'a> ToGlibPtr<'a, *const ffi::CoglDebugObjectTypeInfo> for DebugObjectTypeInfo<'a> {
     type Storage = &'a Self;
 
     #[inline]
@@ -29,7 +30,7 @@ impl<'a> ToGlibPtr<'a, *const ffi::CoglDebugObjectTypeInfo> for DebugObjectTypeI
 }
 
 #[doc(hidden)]
-impl<'a> ToGlibPtrMut<'a, *mut ffi::CoglDebugObjectTypeInfo> for DebugObjectTypeInfo {
+impl<'a> ToGlibPtrMut<'a, *mut ffi::CoglDebugObjectTypeInfo> for DebugObjectTypeInfo<'a> {
     type Storage = &'a mut Self;
 
     #[inline]
@@ -40,21 +41,21 @@ impl<'a> ToGlibPtrMut<'a, *mut ffi::CoglDebugObjectTypeInfo> for DebugObjectType
 }
 
 #[doc(hidden)]
-impl FromGlibPtrNone<*const ffi::CoglDebugObjectTypeInfo> for DebugObjectTypeInfo {
+impl<'a> FromGlibPtrNone<*const ffi::CoglDebugObjectTypeInfo> for DebugObjectTypeInfo<'a> {
     unsafe fn from_glib_none(ptr: *const ffi::CoglDebugObjectTypeInfo) -> Self {
         *(ptr as *const DebugObjectTypeInfo)
     }
 }
 
 #[doc(hidden)]
-impl FromGlibPtrNone<*mut ffi::CoglDebugObjectTypeInfo> for DebugObjectTypeInfo {
+impl<'a> FromGlibPtrNone<*mut ffi::CoglDebugObjectTypeInfo> for DebugObjectTypeInfo<'a> {
     unsafe fn from_glib_none(ptr: *mut ffi::CoglDebugObjectTypeInfo) -> Self {
         *(ptr as *mut DebugObjectTypeInfo)
     }
 }
 
 #[doc(hidden)]
-impl FromGlibPtrBorrow<*mut ffi::CoglDebugObjectTypeInfo> for DebugObjectTypeInfo {
+impl<'a> FromGlibPtrBorrow<*mut ffi::CoglDebugObjectTypeInfo> for DebugObjectTypeInfo<'a> {
     unsafe fn from_glib_borrow(
         ptr: *mut ffi::CoglDebugObjectTypeInfo,
     ) -> glib::translate::Borrowed<Self> {
@@ -63,7 +64,7 @@ impl FromGlibPtrBorrow<*mut ffi::CoglDebugObjectTypeInfo> for DebugObjectTypeInf
 }
 
 #[doc(hidden)]
-impl FromGlibPtrBorrow<*const ffi::CoglDebugObjectTypeInfo> for DebugObjectTypeInfo {
+impl<'a> FromGlibPtrBorrow<*const ffi::CoglDebugObjectTypeInfo> for DebugObjectTypeInfo<'a> {
     unsafe fn from_glib_borrow(
         ptr: *const ffi::CoglDebugObjectTypeInfo,
     ) -> glib::translate::Borrowed<Self> {

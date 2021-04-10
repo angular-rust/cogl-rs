@@ -2,26 +2,34 @@ use glib::translate::*;
 use std::mem;
 
 #[repr(C)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug)] // PartialEq, Eq, Hash
 pub struct DepthState {
-    //TODO:
-// pub private_member_magic: u32,
-// pub private_member_test_enabled: CoglBool,
-// pub private_member_test_function: CoglDepthTestFunction,
-// pub private_member_write_enabled: CoglBool,
-// pub private_member_range_near: c_float,
-// pub private_member_range_far: c_float,
-// pub private_member_padding0: u32,
-// pub private_member_padding1: u32,
-// pub private_member_padding2: u32,
-// pub private_member_padding3: u32,
-// pub private_member_padding4: u32,
-// pub private_member_padding5: u32,
-// pub private_member_padding6: u32,
-// pub private_member_padding7: u32,
-// pub private_member_padding8: u32,
-// pub private_member_padding9: u32,
+    pub private_member_magic: u32,
+    pub private_member_test_enabled: bool, // CoglBool
+    pub private_member_test_function: i32, // CoglDepthTestFunction, // TODO: possible should be enum
+    pub private_member_write_enabled: bool, // CoglBool
+    pub private_member_range_near: f32,
+    pub private_member_range_far: f32,
+    pub private_member_padding0: u32,
+    pub private_member_padding1: u32,
+    pub private_member_padding2: u32,
+    pub private_member_padding3: u32,
+    pub private_member_padding4: u32,
+    pub private_member_padding5: u32,
+    pub private_member_padding6: u32,
+    pub private_member_padding7: u32,
+    pub private_member_padding8: u32,
+    pub private_member_padding9: u32,
 }
+
+//pub const COGL_DEPTH_TEST_FUNCTION_NEVER: CoglDepthTestFunction = 512;
+//pub const COGL_DEPTH_TEST_FUNCTION_LESS: CoglDepthTestFunction = 513;
+//pub const COGL_DEPTH_TEST_FUNCTION_EQUAL: CoglDepthTestFunction = 514;
+//pub const COGL_DEPTH_TEST_FUNCTION_LEQUAL: CoglDepthTestFunction = 515;
+//pub const COGL_DEPTH_TEST_FUNCTION_GREATER: CoglDepthTestFunction = 516;
+//pub const COGL_DEPTH_TEST_FUNCTION_NOTEQUAL: CoglDepthTestFunction = 517;
+//pub const COGL_DEPTH_TEST_FUNCTION_GEQUAL: CoglDepthTestFunction = 518;
+//pub const COGL_DEPTH_TEST_FUNCTION_ALWAYS: CoglDepthTestFunction = 519;
 
 #[doc(hidden)]
 impl Uninitialized for DepthState {
