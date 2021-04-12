@@ -1,33 +1,51 @@
-on: [push]
+name: Coverage
 
-name: Code Coverage
+#on:
+#  push:
+#    branches:
+#      - main
+#  pull_request:
+
+on: [push, pull_request]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: full
 
 jobs:
-  lint:
+  coverage:
+    name: Coverage
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions-rs/toolchain@v1
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
         with:
           toolchain: nightly
-          override: true
+          profile: minimal
+          default: true
       - name: Install Cogl
         run: sudo apt-get install libcogl-dev
-      - name: Clean
-        uses: actions-rs/cargo@v1
+
+      - name: Restore cache
+        uses: Swatinem/rust-cache@v1
+
+      - name: Run cargo-tarpaulin
+        uses: actions-rs/tarpaulin@v0.1
         with:
-          command: clean
-      - name: Build
-        uses: actions-rs/cargo@v1
+          args: '--run-types Doctests,Tests'
+          timeout: 120
+
+      - name: Upload to codecov.io
+        uses: codecov/codecov-action@239febf655bba88b16ff5dea1d3135ea8663a1f9
         with:
-          command: build
-      - name: Test
-        uses: actions-rs/cargo@v1
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v2
         with:
-          command: test
-          args: --all-features --no-fail-fast
-        env:
-          CARGO_INCREMENTAL: '0'
-          RUSTFLAGS: '-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off -Cpanic=abort -Zpanic_abort_tests'
-          RUSTDOCFLAGS: '-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off -Cpanic=abort -Zpanic_abort_tests'
-      - uses: actions-rs/grcov@v0.1
+          name: code-coverage-report
+          path: cobertura.xml
+          retention-days: 30
