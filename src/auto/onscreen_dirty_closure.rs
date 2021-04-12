@@ -1,5 +1,3 @@
-use gobject_sys;
-
 glib_wrapper! {
     #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct OnscreenDirtyClosure(Boxed<ffi::CoglOnscreenDirtyClosure>);

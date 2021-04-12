@@ -42,17 +42,22 @@ impl<'a> ToGlibContainerFromSlice<'a, *mut ffi::CoglFenceClosure> for &'a FenceC
         Option<Vec<ffi::CoglFenceClosure>>,
     );
 
-    fn to_glib_none_from_slice(t: &'a [&'a FenceClosure]) -> (*mut ffi::CoglFenceClosure, Self::Storage) {
-
+    fn to_glib_none_from_slice(
+        t: &'a [&'a FenceClosure],
+    ) -> (*mut ffi::CoglFenceClosure, Self::Storage) {
         let v: Vec<_> = t.iter().map(|s| s.to_glib_none()).collect();
         let mut v_ptr: Vec<_> = v.iter().map(|s| s.0).collect();
         v_ptr.push(ptr::null_mut());
 
-        (v_ptr.as_ptr() as *mut ffi::CoglFenceClosure, (v, Some(v_ptr)))
+        (
+            v_ptr.as_ptr() as *mut ffi::CoglFenceClosure,
+            (v, Some(v_ptr)),
+        )
     }
 
-    fn to_glib_container_from_slice(t: &'a [&'a FenceClosure]) -> (*mut ffi::CoglFenceClosure, Self::Storage) {
-
+    fn to_glib_container_from_slice(
+        t: &'a [&'a FenceClosure],
+    ) -> (*mut ffi::CoglFenceClosure, Self::Storage) {
         let v: Vec<_> = t.iter().map(|s| s.to_glib_none()).collect();
 
         let v_ptr = unsafe {
@@ -70,7 +75,6 @@ impl<'a> ToGlibContainerFromSlice<'a, *mut ffi::CoglFenceClosure> for &'a FenceC
     }
 
     fn to_glib_full_from_slice(_: &[&'a FenceClosure]) -> *mut ffi::CoglFenceClosure {
-
         unimplemented!()
     }
 }
@@ -81,17 +85,22 @@ impl<'a> ToGlibContainerFromSlice<'a, *const ffi::CoglFenceClosure> for &'a Fenc
         Option<Vec<ffi::CoglFenceClosure>>,
     );
 
-    fn to_glib_none_from_slice(t: &'a [&'a FenceClosure]) -> (*const ffi::CoglFenceClosure, Self::Storage) {
-
+    fn to_glib_none_from_slice(
+        t: &'a [&'a FenceClosure],
+    ) -> (*const ffi::CoglFenceClosure, Self::Storage) {
         let v: Vec<_> = t.iter().map(|s| s.to_glib_none()).collect();
         let mut v_ptr: Vec<_> = v.iter().map(|s| s.0).collect();
         v_ptr.push(ptr::null_mut());
 
-        (v_ptr.as_ptr() as *const ffi::CoglFenceClosure, (v, Some(v_ptr)))
+        (
+            v_ptr.as_ptr() as *const ffi::CoglFenceClosure,
+            (v, Some(v_ptr)),
+        )
     }
 
-    fn to_glib_container_from_slice(t: &'a [&'a FenceClosure]) -> (*const ffi::CoglFenceClosure, Self::Storage) {
-
+    fn to_glib_container_from_slice(
+        t: &'a [&'a FenceClosure],
+    ) -> (*const ffi::CoglFenceClosure, Self::Storage) {
         let v: Vec<_> = t.iter().map(|s| s.to_glib_none()).collect();
 
         let v_ptr = unsafe {
@@ -109,7 +118,6 @@ impl<'a> ToGlibContainerFromSlice<'a, *const ffi::CoglFenceClosure> for &'a Fenc
     }
 
     fn to_glib_full_from_slice(_: &[&'a FenceClosure]) -> *const ffi::CoglFenceClosure {
-
         unimplemented!()
     }
 }
@@ -137,7 +145,9 @@ impl FromGlibPtrNone<*mut ffi::CoglFenceClosure> for FenceClosure {
 
 impl FromGlibPtrBorrow<ffi::CoglFenceClosure> for FenceClosure {
     #[inline]
-    unsafe fn from_glib_borrow(ptr: ffi::CoglFenceClosure) -> glib::translate::Borrowed<FenceClosure> {
+    unsafe fn from_glib_borrow(
+        ptr: ffi::CoglFenceClosure,
+    ) -> glib::translate::Borrowed<FenceClosure> {
         glib::translate::Borrowed::new(FenceClosure(ptr))
     }
 }
@@ -151,7 +161,9 @@ impl FromGlibPtrBorrow<*mut ffi::CoglFenceClosure> for FenceClosure {
 
 #[doc(hidden)]
 impl FromGlibPtrBorrow<*const ffi::CoglFenceClosure> for FenceClosure {
-    unsafe fn from_glib_borrow(ptr: *const ffi::CoglFenceClosure) -> glib::translate::Borrowed<Self> {
+    unsafe fn from_glib_borrow(
+        ptr: *const ffi::CoglFenceClosure,
+    ) -> glib::translate::Borrowed<Self> {
         glib::translate::Borrowed::new(*(ptr as *const FenceClosure))
     }
 }
@@ -176,7 +188,10 @@ impl FromGlibContainerAsVec<ffi::CoglFenceClosure, *mut ffi::CoglFenceClosure> f
         res
     }
 
-    unsafe fn from_glib_container_num_as_vec(ptr: *mut ffi::CoglFenceClosure, num: usize) -> Vec<Self> {
+    unsafe fn from_glib_container_num_as_vec(
+        ptr: *mut ffi::CoglFenceClosure,
+        num: usize,
+    ) -> Vec<Self> {
         let res = FromGlibContainerAsVec::from_glib_none_num_as_vec(ptr, num);
         glib_sys::g_free(ptr as *mut _);
         res
@@ -196,7 +211,9 @@ impl FromGlibContainerAsVec<ffi::CoglFenceClosure, *mut ffi::CoglFenceClosure> f
     }
 }
 
-impl FromGlibPtrArrayContainerAsVec<ffi::CoglFenceClosure, *mut ffi::CoglFenceClosure> for FenceClosure {
+impl FromGlibPtrArrayContainerAsVec<ffi::CoglFenceClosure, *mut ffi::CoglFenceClosure>
+    for FenceClosure
+{
     unsafe fn from_glib_none_as_vec(ptr: *mut ffi::CoglFenceClosure) -> Vec<Self> {
         FromGlibContainerAsVec::from_glib_none_num_as_vec(ptr, c_ptr_array_len(ptr))
     }

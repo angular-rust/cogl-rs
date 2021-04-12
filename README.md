@@ -19,7 +19,7 @@
 [license-url]: https://github.com/angular-rust/cogl-rs/blob/master/LICENSE
 [gitter-badge]: https://img.shields.io/gitter/room/angular_rust/community.svg?style=flat-square
 [gitter-url]: https://gitter.im/angular_rust/community
-[tests-badge]: https://img.shields.io/github/workflow/status/angular-rust/cogl-rs/tests?label=tests&logo=github&style=flat-square
+[tests-badge]: https://img.shields.io/github/workflow/status/angular-rust/cogl-rs/Tests?label=tests&logo=github&style=flat-square
 [tests-url]: https://github.com/angular-rust/cogl-rs/actions/workflows/tests.yml
 [codecov-badge]: https://img.shields.io/codecov/c/github/angular-rust/cogl-rs?logo=codecov&style=flat-square&token=d0AlgG7AfE
 [codecov-url]: https://codecov.io/gh/angular-rust/cogl-rs

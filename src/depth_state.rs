@@ -5,7 +5,7 @@ use std::mem;
 #[derive(Clone, Copy, Debug)] // PartialEq, Eq, Hash
 pub struct DepthState {
     pub private_member_magic: u32,
-    pub private_member_test_enabled: bool, // CoglBool
+    pub private_member_test_enabled: bool,  // CoglBool
     pub private_member_test_function: i32, // CoglDepthTestFunction, // TODO: possible should be enum
     pub private_member_write_enabled: bool, // CoglBool
     pub private_member_range_near: f32,

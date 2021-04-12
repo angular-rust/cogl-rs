@@ -43,7 +43,6 @@ impl<'a> ToGlibContainerFromSlice<'a, *mut ffi::CoglHandle> for &'a Handle {
     );
 
     fn to_glib_none_from_slice(t: &'a [&'a Handle]) -> (*mut ffi::CoglHandle, Self::Storage) {
-
         let v: Vec<_> = t.iter().map(|s| s.to_glib_none()).collect();
         let mut v_ptr: Vec<_> = v.iter().map(|s| s.0).collect();
         v_ptr.push(ptr::null_mut());
@@ -52,7 +51,6 @@ impl<'a> ToGlibContainerFromSlice<'a, *mut ffi::CoglHandle> for &'a Handle {
     }
 
     fn to_glib_container_from_slice(t: &'a [&'a Handle]) -> (*mut ffi::CoglHandle, Self::Storage) {
-
         let v: Vec<_> = t.iter().map(|s| s.to_glib_none()).collect();
 
         let v_ptr = unsafe {
@@ -70,7 +68,6 @@ impl<'a> ToGlibContainerFromSlice<'a, *mut ffi::CoglHandle> for &'a Handle {
     }
 
     fn to_glib_full_from_slice(_: &[&'a Handle]) -> *mut ffi::CoglHandle {
-
         unimplemented!()
     }
 }
@@ -82,7 +79,6 @@ impl<'a> ToGlibContainerFromSlice<'a, *const ffi::CoglHandle> for &'a Handle {
     );
 
     fn to_glib_none_from_slice(t: &'a [&'a Handle]) -> (*const ffi::CoglHandle, Self::Storage) {
-
         let v: Vec<_> = t.iter().map(|s| s.to_glib_none()).collect();
         let mut v_ptr: Vec<_> = v.iter().map(|s| s.0).collect();
         v_ptr.push(ptr::null_mut());
@@ -90,8 +86,9 @@ impl<'a> ToGlibContainerFromSlice<'a, *const ffi::CoglHandle> for &'a Handle {
         (v_ptr.as_ptr() as *const ffi::CoglHandle, (v, Some(v_ptr)))
     }
 
-    fn to_glib_container_from_slice(t: &'a [&'a Handle]) -> (*const ffi::CoglHandle, Self::Storage) {
-
+    fn to_glib_container_from_slice(
+        t: &'a [&'a Handle],
+    ) -> (*const ffi::CoglHandle, Self::Storage) {
         let v: Vec<_> = t.iter().map(|s| s.to_glib_none()).collect();
 
         let v_ptr = unsafe {
@@ -109,7 +106,6 @@ impl<'a> ToGlibContainerFromSlice<'a, *const ffi::CoglHandle> for &'a Handle {
     }
 
     fn to_glib_full_from_slice(_: &[&'a Handle]) -> *const ffi::CoglHandle {
-
         unimplemented!()
     }
 }

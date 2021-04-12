@@ -1,3 +1,9 @@
+#![allow(
+    clippy::too_many_arguments,
+    clippy::let_and_return,
+    clippy::from_over_into
+)]
+
 use crate::{Euler, Quaternion};
 
 use glib::translate::*;
@@ -5,7 +11,7 @@ use std::boxed::Box as Box_;
 use std::mem;
 
 glib_wrapper! {
-    #[derive(Debug, PartialOrd, Ord, Hash)]
+    #[derive(Debug, PartialOrd, Ord)] // Hash
     pub struct Matrix(Boxed<ffi::CoglMatrix>);
 
     match fn {

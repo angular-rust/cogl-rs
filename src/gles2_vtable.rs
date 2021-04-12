@@ -1,3 +1,10 @@
+#![allow(
+    clippy::too_many_arguments,
+    clippy::let_and_return,
+    clippy::from_over_into,
+    clippy::upper_case_acronyms
+)]
+
 use glib::translate::*;
 use std::mem;
 

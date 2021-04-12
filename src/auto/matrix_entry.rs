@@ -3,7 +3,7 @@ use glib::translate::*;
 use std::mem;
 
 glib_wrapper! {
-    #[derive(Debug, PartialOrd, Ord, Hash)]
+    #[derive(Debug, PartialOrd, Ord)] // Hash
     pub struct MatrixEntry(Shared<ffi::CoglMatrixEntry>);
 
     match fn {

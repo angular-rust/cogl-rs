@@ -1,6 +1,11 @@
+#![allow(
+    clippy::too_many_arguments,
+    clippy::let_and_return,
+    clippy::from_over_into
+)]
+
 use crate::{Driver, Object, OnscreenTemplate, Output, RendererConstraint, WinsysID};
 
-use glib;
 use glib::translate::*;
 use std::{fmt, ptr};
 

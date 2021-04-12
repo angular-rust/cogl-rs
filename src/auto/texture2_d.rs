@@ -1,6 +1,5 @@
 use crate::{Bitmap, Context, Object, PixelFormat, Texture};
 
-use glib;
 use glib::translate::*;
 use std::{fmt, ptr};
 

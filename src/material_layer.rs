@@ -42,22 +42,28 @@ impl<'a> ToGlibContainerFromSlice<'a, *mut ffi::CoglMaterialLayer> for &'a Mater
         Option<Vec<ffi::CoglMaterialLayer>>,
     );
 
-    fn to_glib_none_from_slice(t: &'a [&'a MaterialLayer]) -> (*mut ffi::CoglMaterialLayer, Self::Storage) {
-
+    fn to_glib_none_from_slice(
+        t: &'a [&'a MaterialLayer],
+    ) -> (*mut ffi::CoglMaterialLayer, Self::Storage) {
         let v: Vec<_> = t.iter().map(|s| s.to_glib_none()).collect();
         let mut v_ptr: Vec<_> = v.iter().map(|s| s.0).collect();
         v_ptr.push(ptr::null_mut());
 
-        (v_ptr.as_ptr() as *mut ffi::CoglMaterialLayer, (v, Some(v_ptr)))
+        (
+            v_ptr.as_ptr() as *mut ffi::CoglMaterialLayer,
+            (v, Some(v_ptr)),
+        )
     }
 
-    fn to_glib_container_from_slice(t: &'a [&'a MaterialLayer]) -> (*mut ffi::CoglMaterialLayer, Self::Storage) {
-
+    fn to_glib_container_from_slice(
+        t: &'a [&'a MaterialLayer],
+    ) -> (*mut ffi::CoglMaterialLayer, Self::Storage) {
         let v: Vec<_> = t.iter().map(|s| s.to_glib_none()).collect();
 
         let v_ptr = unsafe {
-            let v_ptr = glib_sys::g_malloc0(mem::size_of::<ffi::CoglMaterialLayer>() * (t.len() + 1))
-                as *mut ffi::CoglMaterialLayer;
+            let v_ptr =
+                glib_sys::g_malloc0(mem::size_of::<ffi::CoglMaterialLayer>() * (t.len() + 1))
+                    as *mut ffi::CoglMaterialLayer;
 
             for (i, s) in v.iter().enumerate() {
                 ptr::write(v_ptr.add(i), s.0);
@@ -70,7 +76,6 @@ impl<'a> ToGlibContainerFromSlice<'a, *mut ffi::CoglMaterialLayer> for &'a Mater
     }
 
     fn to_glib_full_from_slice(_: &[&'a MaterialLayer]) -> *mut ffi::CoglMaterialLayer {
-
         unimplemented!()
     }
 }
@@ -81,22 +86,28 @@ impl<'a> ToGlibContainerFromSlice<'a, *const ffi::CoglMaterialLayer> for &'a Mat
         Option<Vec<ffi::CoglMaterialLayer>>,
     );
 
-    fn to_glib_none_from_slice(t: &'a [&'a MaterialLayer]) -> (*const ffi::CoglMaterialLayer, Self::Storage) {
-
+    fn to_glib_none_from_slice(
+        t: &'a [&'a MaterialLayer],
+    ) -> (*const ffi::CoglMaterialLayer, Self::Storage) {
         let v: Vec<_> = t.iter().map(|s| s.to_glib_none()).collect();
         let mut v_ptr: Vec<_> = v.iter().map(|s| s.0).collect();
         v_ptr.push(ptr::null_mut());
 
-        (v_ptr.as_ptr() as *const ffi::CoglMaterialLayer, (v, Some(v_ptr)))
+        (
+            v_ptr.as_ptr() as *const ffi::CoglMaterialLayer,
+            (v, Some(v_ptr)),
+        )
     }
 
-    fn to_glib_container_from_slice(t: &'a [&'a MaterialLayer]) -> (*const ffi::CoglMaterialLayer, Self::Storage) {
-
+    fn to_glib_container_from_slice(
+        t: &'a [&'a MaterialLayer],
+    ) -> (*const ffi::CoglMaterialLayer, Self::Storage) {
         let v: Vec<_> = t.iter().map(|s| s.to_glib_none()).collect();
 
         let v_ptr = unsafe {
-            let v_ptr = glib_sys::g_malloc0(mem::size_of::<ffi::CoglMaterialLayer>() * (t.len() + 1))
-                as *mut ffi::CoglMaterialLayer;
+            let v_ptr =
+                glib_sys::g_malloc0(mem::size_of::<ffi::CoglMaterialLayer>() * (t.len() + 1))
+                    as *mut ffi::CoglMaterialLayer;
 
             for (i, s) in v.iter().enumerate() {
                 ptr::write(v_ptr.add(i), s.0);
@@ -109,7 +120,6 @@ impl<'a> ToGlibContainerFromSlice<'a, *const ffi::CoglMaterialLayer> for &'a Mat
     }
 
     fn to_glib_full_from_slice(_: &[&'a MaterialLayer]) -> *const ffi::CoglMaterialLayer {
-
         unimplemented!()
     }
 }
@@ -137,21 +147,27 @@ impl FromGlibPtrNone<*mut ffi::CoglMaterialLayer> for MaterialLayer {
 
 impl FromGlibPtrBorrow<ffi::CoglMaterialLayer> for MaterialLayer {
     #[inline]
-    unsafe fn from_glib_borrow(ptr: ffi::CoglMaterialLayer) -> glib::translate::Borrowed<MaterialLayer> {
+    unsafe fn from_glib_borrow(
+        ptr: ffi::CoglMaterialLayer,
+    ) -> glib::translate::Borrowed<MaterialLayer> {
         glib::translate::Borrowed::new(MaterialLayer(ptr))
     }
 }
 
 #[doc(hidden)]
 impl FromGlibPtrBorrow<*mut ffi::CoglMaterialLayer> for MaterialLayer {
-    unsafe fn from_glib_borrow(ptr: *mut ffi::CoglMaterialLayer) -> glib::translate::Borrowed<Self> {
+    unsafe fn from_glib_borrow(
+        ptr: *mut ffi::CoglMaterialLayer,
+    ) -> glib::translate::Borrowed<Self> {
         glib::translate::Borrowed::new(*(ptr as *mut MaterialLayer))
     }
 }
 
 #[doc(hidden)]
 impl FromGlibPtrBorrow<*const ffi::CoglMaterialLayer> for MaterialLayer {
-    unsafe fn from_glib_borrow(ptr: *const ffi::CoglMaterialLayer) -> glib::translate::Borrowed<Self> {
+    unsafe fn from_glib_borrow(
+        ptr: *const ffi::CoglMaterialLayer,
+    ) -> glib::translate::Borrowed<Self> {
         glib::translate::Borrowed::new(*(ptr as *const MaterialLayer))
     }
 }
@@ -176,7 +192,10 @@ impl FromGlibContainerAsVec<ffi::CoglMaterialLayer, *mut ffi::CoglMaterialLayer>
         res
     }
 
-    unsafe fn from_glib_container_num_as_vec(ptr: *mut ffi::CoglMaterialLayer, num: usize) -> Vec<Self> {
+    unsafe fn from_glib_container_num_as_vec(
+        ptr: *mut ffi::CoglMaterialLayer,
+        num: usize,
+    ) -> Vec<Self> {
         let res = FromGlibContainerAsVec::from_glib_none_num_as_vec(ptr, num);
         glib_sys::g_free(ptr as *mut _);
         res
@@ -196,7 +215,9 @@ impl FromGlibContainerAsVec<ffi::CoglMaterialLayer, *mut ffi::CoglMaterialLayer>
     }
 }
 
-impl FromGlibPtrArrayContainerAsVec<ffi::CoglMaterialLayer, *mut ffi::CoglMaterialLayer> for MaterialLayer {
+impl FromGlibPtrArrayContainerAsVec<ffi::CoglMaterialLayer, *mut ffi::CoglMaterialLayer>
+    for MaterialLayer
+{
     unsafe fn from_glib_none_as_vec(ptr: *mut ffi::CoglMaterialLayer) -> Vec<Self> {
         FromGlibContainerAsVec::from_glib_none_num_as_vec(ptr, c_ptr_array_len(ptr))
     }

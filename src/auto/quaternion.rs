@@ -1,3 +1,9 @@
+#![allow(
+    clippy::too_many_arguments,
+    clippy::let_and_return,
+    clippy::from_over_into
+)]
+
 use crate::{Euler, Matrix};
 
 use glib::translate::*;
@@ -5,7 +11,7 @@ use std::boxed::Box as Box_;
 use std::mem;
 
 glib_wrapper! {
-    #[derive(Debug, PartialOrd, Ord, Hash)]
+    #[derive(Debug, PartialOrd, Ord)] // Hash
     pub struct Quaternion(Boxed<ffi::CoglQuaternion>);
 
     match fn {
@@ -35,8 +41,7 @@ impl Quaternion {
         unsafe {
             let mut vector3 = mem::MaybeUninit::uninit();
             ffi::cogl_quaternion_get_rotation_axis(self.to_glib_none().0, vector3.as_mut_ptr());
-            let vector3 = vector3.assume_init();
-            vector3
+            vector3.assume_init()
         }
     }
 

@@ -613,8 +613,7 @@ impl Primitive {
             let primitive = from_glib_borrow(primitive);
             let attribute = from_glib_borrow(attribute);
             let callback: *mut P = user_data as *const _ as usize as *mut P;
-            let res = (*callback)(&primitive, &attribute);
-            res
+            (*callback)(&primitive, &attribute)
         }
         let callback = Some(callback_func::<P> as _);
         let super_callback0: &P = &callback_data;

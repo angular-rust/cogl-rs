@@ -5,7 +5,7 @@ use glib::translate::*;
 use std::boxed::Box as Box_;
 
 glib_wrapper! {
-    #[derive(Debug, PartialOrd, Ord, Hash)]
+    #[derive(Debug, PartialOrd, Ord)] // Hash
     pub struct Euler(Boxed<ffi::CoglEuler>);
 
     match fn {

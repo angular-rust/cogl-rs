@@ -1,5 +1,5 @@
 use crate::{Display, Object, Renderer};
-use glib;
+
 use glib::translate::*;
 use std::{fmt, ptr};
 

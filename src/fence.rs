@@ -51,7 +51,6 @@ impl<'a> ToGlibContainerFromSlice<'a, *mut ffi::CoglFence> for &'a Fence {
     }
 
     fn to_glib_container_from_slice(t: &'a [&'a Fence]) -> (*mut ffi::CoglFence, Self::Storage) {
-
         let v: Vec<_> = t.iter().map(|s| s.to_glib_none()).collect();
 
         let v_ptr = unsafe {
@@ -69,7 +68,6 @@ impl<'a> ToGlibContainerFromSlice<'a, *mut ffi::CoglFence> for &'a Fence {
     }
 
     fn to_glib_full_from_slice(_: &[&'a Fence]) -> *mut ffi::CoglFence {
-
         unimplemented!()
     }
 }
@@ -81,7 +79,6 @@ impl<'a> ToGlibContainerFromSlice<'a, *const ffi::CoglFence> for &'a Fence {
     );
 
     fn to_glib_none_from_slice(t: &'a [&'a Fence]) -> (*const ffi::CoglFence, Self::Storage) {
-
         let v: Vec<_> = t.iter().map(|s| s.to_glib_none()).collect();
         let mut v_ptr: Vec<_> = v.iter().map(|s| s.0).collect();
         v_ptr.push(ptr::null_mut());
@@ -90,7 +87,6 @@ impl<'a> ToGlibContainerFromSlice<'a, *const ffi::CoglFence> for &'a Fence {
     }
 
     fn to_glib_container_from_slice(t: &'a [&'a Fence]) -> (*const ffi::CoglFence, Self::Storage) {
-
         let v: Vec<_> = t.iter().map(|s| s.to_glib_none()).collect();
 
         let v_ptr = unsafe {
@@ -108,7 +104,6 @@ impl<'a> ToGlibContainerFromSlice<'a, *const ffi::CoglFence> for &'a Fence {
     }
 
     fn to_glib_full_from_slice(_: &[&'a Fence]) -> *const ffi::CoglFence {
-
         unimplemented!()
     }
 }

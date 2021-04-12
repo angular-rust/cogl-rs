@@ -3,7 +3,6 @@ use crate::{
     PipelineFilter, PipelineWrapMode, Snippet, Texture, TextureType, Winding,
 };
 
-use glib;
 use glib::object::IsA;
 use glib::translate::*;
 use std::{fmt, ptr};
@@ -96,8 +95,7 @@ impl Pipeline {
         ) -> ffi::CoglBool {
             let pipeline = from_glib_borrow(pipeline);
             let callback: *mut P = user_data as *const _ as usize as *mut P;
-            let res = (*callback)(&pipeline, layer_index);
-            res
+            (*callback)(&pipeline, layer_index)
         }
         let callback = Some(callback_func::<P> as _);
         let super_callback0: &P = &callback_data;

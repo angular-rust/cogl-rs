@@ -43,7 +43,6 @@ impl<'a> ToGlibContainerFromSlice<'a, *mut ffi::CoglMaterial> for &'a Material {
     );
 
     fn to_glib_none_from_slice(t: &'a [&'a Material]) -> (*mut ffi::CoglMaterial, Self::Storage) {
-
         let v: Vec<_> = t.iter().map(|s| s.to_glib_none()).collect();
         let mut v_ptr: Vec<_> = v.iter().map(|s| s.0).collect();
         v_ptr.push(ptr::null_mut());
@@ -51,8 +50,9 @@ impl<'a> ToGlibContainerFromSlice<'a, *mut ffi::CoglMaterial> for &'a Material {
         (v_ptr.as_ptr() as *mut ffi::CoglMaterial, (v, Some(v_ptr)))
     }
 
-    fn to_glib_container_from_slice(t: &'a [&'a Material]) -> (*mut ffi::CoglMaterial, Self::Storage) {
-
+    fn to_glib_container_from_slice(
+        t: &'a [&'a Material],
+    ) -> (*mut ffi::CoglMaterial, Self::Storage) {
         let v: Vec<_> = t.iter().map(|s| s.to_glib_none()).collect();
 
         let v_ptr = unsafe {
@@ -70,7 +70,6 @@ impl<'a> ToGlibContainerFromSlice<'a, *mut ffi::CoglMaterial> for &'a Material {
     }
 
     fn to_glib_full_from_slice(_: &[&'a Material]) -> *mut ffi::CoglMaterial {
-
         unimplemented!()
     }
 }
@@ -82,7 +81,6 @@ impl<'a> ToGlibContainerFromSlice<'a, *const ffi::CoglMaterial> for &'a Material
     );
 
     fn to_glib_none_from_slice(t: &'a [&'a Material]) -> (*const ffi::CoglMaterial, Self::Storage) {
-
         let v: Vec<_> = t.iter().map(|s| s.to_glib_none()).collect();
         let mut v_ptr: Vec<_> = v.iter().map(|s| s.0).collect();
         v_ptr.push(ptr::null_mut());
@@ -90,8 +88,9 @@ impl<'a> ToGlibContainerFromSlice<'a, *const ffi::CoglMaterial> for &'a Material
         (v_ptr.as_ptr() as *const ffi::CoglMaterial, (v, Some(v_ptr)))
     }
 
-    fn to_glib_container_from_slice(t: &'a [&'a Material]) -> (*const ffi::CoglMaterial, Self::Storage) {
-
+    fn to_glib_container_from_slice(
+        t: &'a [&'a Material],
+    ) -> (*const ffi::CoglMaterial, Self::Storage) {
         let v: Vec<_> = t.iter().map(|s| s.to_glib_none()).collect();
 
         let v_ptr = unsafe {
@@ -109,7 +108,6 @@ impl<'a> ToGlibContainerFromSlice<'a, *const ffi::CoglMaterial> for &'a Material
     }
 
     fn to_glib_full_from_slice(_: &[&'a Material]) -> *const ffi::CoglMaterial {
-
         unimplemented!()
     }
 }

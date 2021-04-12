@@ -1,6 +1,11 @@
+#![allow(
+    clippy::too_many_arguments,
+    clippy::let_and_return,
+    clippy::from_over_into
+)]
+
 use crate::{Bitmap, Context, Object, PixelFormat, Texture};
 
-use glib;
 use glib::translate::*;
 use std::{fmt, ptr};
 
