@@ -26,6 +26,7 @@ jobs:
           toolchain: nightly
           profile: minimal
           default: true
+
       - name: Install Cogl
         run: sudo apt-get install libcogl-dev
 
