@@ -102,3 +102,11 @@ pub fn source_new(context: &Context, priority: glib::Priority) -> glib::Source {
 // if let Some(name) = name {
 //     glib_sys::g_source_set_name(source, name.to_glib_none().0);
 // }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn it_works() {
+        assert_eq!(2 + 2, 4);
+    }
+}
