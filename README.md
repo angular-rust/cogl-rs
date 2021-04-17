@@ -26,12 +26,16 @@
 [loc-badge]: https://img.shields.io/tokei/lines/github/angular-rust/cogl-rs?style=flat-square
 [loc-url]: https://github.com/angular-rust/cogl-rs
 
-**cogl-rs** is Rust bindings for the Cogl library. cogl-rs is being developed in the Angular Rust infrastructure since Angular Rust depends on it.
+**cogl-rs** is Rust bindings for the Cogl library. cogl-rs is being developed in the Angular Rust infrastructure since Angular Rust was depends on it.
 
 **COGL** is a modern 3D graphics API with associated utility APIs designed to expose the features of 3D graphics hardware using a more object oriented design than OpenGL. It is used primarily by Clutter to provide a common rendering API that works transparently across OpenGL >=1.4, OpenGL ES 1.1 and OpenGL ES 2.0.
 It is not tied to any one toolkit or even constrained to developing UI toolkits.
 
+> If you want to use a more actively developed library with the same functionality, but with better performance and new functionality, then I advise you to use [UX-dx](https://github.com/angular-rust/ux-dx) as the successor to cogl-rs.
+
 **Angular Rust** is a high productivity, `platform-agnostic` frontend framework for the [Rust language](https://www.rust-lang.org/). It now supports desktop and web development. Angular Rust currently uses GTK for desktop development and WebAssembly for web development. We are planning to add support for mobile development.
+
+![Angular Rust structure](https://dudochkin-victor.github.io/assets/angular-rust/structure.svg)
 
 ## Quick Start
 
