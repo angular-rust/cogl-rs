@@ -5,10 +5,9 @@ use crate::{
 
 use crate::Quaternion;
 
-use glib;
 use glib::object::IsA;
 use glib::translate::*;
-use libc;
+
 use std::boxed::Box as Box_;
 use std::{fmt, ptr};
 

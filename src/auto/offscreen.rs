@@ -1,7 +1,7 @@
+use crate::Texture;
 use glib::object::IsA;
 use glib::translate::*;
 use std::fmt;
-use crate::Texture;
 
 glib_wrapper! {
     pub struct Offscreen(Object<ffi::CoglOffscreen, OffscreenClass>);
@@ -14,7 +14,9 @@ glib_wrapper! {
 impl Offscreen {
     pub fn with_texture<P: IsA<Texture>>(texture: &P) -> Offscreen {
         unsafe {
-            from_glib_full(ffi::cogl_offscreen_new_with_texture(texture.as_ref().to_glib_none().0))
+            from_glib_full(ffi::cogl_offscreen_new_with_texture(
+                texture.as_ref().to_glib_none().0,
+            ))
         }
     }
 }

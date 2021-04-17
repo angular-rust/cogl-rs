@@ -1,11 +1,11 @@
 use crate::Matrix;
-use crate::Quaternion;
+// use crate::Quaternion;
 
 use glib::translate::*;
 use std::boxed::Box as Box_;
 
 glib_wrapper! {
-    #[derive(Debug, PartialOrd, Ord, Hash)]
+    #[derive(Debug, PartialOrd, Ord)] // Hash
     pub struct Euler(Boxed<ffi::CoglEuler>);
 
     match fn {
@@ -44,19 +44,19 @@ impl Euler {
         }
     }
 
-    /// Initializes a `self` rotation with the equivalent rotation
-    /// represented by the given `quaternion`.
-    ///
-    /// ## `quaternion`
-    /// A `Euler` with the rotation to initialize with
-    pub fn init_from_quaternion(&mut self, quaternion: &Quaternion) {
-        unsafe {
-            ffi::cogl_euler_init_from_quaternion(
-                self.to_glib_none_mut().0,
-                quaternion.to_glib_none().0,
-            );
-        }
-    }
+    // /// Initializes a `self` rotation with the equivalent rotation
+    // /// represented by the given `quaternion`.
+    // ///
+    // /// ## `quaternion`
+    // /// A `Euler` with the rotation to initialize with
+    // pub fn init_from_quaternion(&mut self, quaternion: &Quaternion) {
+    //     unsafe {
+    //         ffi::cogl_euler_init_from_quaternion(
+    //             self.to_glib_none_mut().0,
+    //             quaternion.to_glib_none().0,
+    //         );
+    //     }
+    // }
 
     fn equal(v1: &Self, v2: &Self) -> bool {
         let a = Box_::into_raw(Box::new(v1)) as *mut _;

@@ -1,6 +1,5 @@
 use crate::{Object, OnscreenTemplate, Renderer};
 
-use glib;
 use glib::translate::*;
 use std::{fmt, ptr};
 

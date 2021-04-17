@@ -1,13 +1,19 @@
+#![allow(
+    clippy::too_many_arguments,
+    clippy::let_and_return,
+    clippy::from_over_into,
+    clippy::upper_case_acronyms
+)]
+
 use glib::translate::*;
 use std::mem;
 
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct PollFD {
-    //TODO:
-// pub fd: c_int,
-// _truncated_record_marker: c_void,
-// // /*Ignored*/field events has incomplete type
+    pub fd: i32,
+    //TODO: _truncated_record_marker: c_void,
+    // // /*Ignored*/field events has incomplete type
 }
 
 #[doc(hidden)]

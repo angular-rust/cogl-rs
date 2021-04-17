@@ -3,7 +3,6 @@ use glib::{
     value::{FromValue, FromValueOptional, SetValue, Value},
     StaticType, Type,
 };
-use gobject_sys;
 
 bitflags! {
     pub struct BufferAccess: u32 {

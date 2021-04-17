@@ -1,5 +1,5 @@
-#![cfg_attr(feature = "cargo-clippy", allow(cast_ptr_alignment))]
-#![cfg_attr(feature = "cargo-clippy", allow(trivially_copy_pass_by_ref))]
+#![cfg_attr(feature = "cargo-clippy", allow(clippy::cast_ptr_alignment))]
+#![cfg_attr(feature = "cargo-clippy", allow(clippy::trivially_copy_pass_by_ref))]
 
 use glib::translate::*;
 
@@ -9,8 +9,8 @@ extern crate glib;
 #[macro_use]
 extern crate bitflags;
 
-#[cfg_attr(feature = "cargo-clippy", allow(type_complexity))]
-#[cfg_attr(feature = "cargo-clippy", allow(unreadable_literal))]
+#[cfg_attr(feature = "cargo-clippy", allow(clippy::type_complexity))]
+#[cfg_attr(feature = "cargo-clippy", allow(clippy::unreadable_literal))]
 mod auto;
 pub use auto::*;
 
@@ -32,8 +32,17 @@ pub use gles2_vtable::GLES2Vtable;
 mod gtype_object;
 pub use gtype_object::GtypeObject;
 
+mod handle;
+pub use handle::Handle;
+
 mod kms_crtc;
 pub use kms_crtc::KmsCrtc;
+
+mod material;
+pub use material::Material;
+
+mod material_layer;
+pub use material_layer::MaterialLayer;
 
 mod onscreen_dirty_info;
 pub use onscreen_dirty_info::OnscreenDirtyInfo;
@@ -93,3 +102,11 @@ pub fn source_new(context: &Context, priority: glib::Priority) -> glib::Source {
 // if let Some(name) = name {
 //     glib_sys::g_source_set_name(source, name.to_glib_none().0);
 // }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn it_works() {
+        assert_eq!(2 + 2, 4);
+    }
+}

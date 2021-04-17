@@ -4,8 +4,7 @@ use std::mem;
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct UserDataKey {
-    pub width: i32,
-    pub height: i32,
+    pub unused: i32,
 }
 
 #[doc(hidden)]

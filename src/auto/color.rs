@@ -3,7 +3,7 @@ use std::boxed::Box as Box_;
 use std::mem;
 
 glib_wrapper! {
-    #[derive(Debug, PartialOrd, Ord, Hash)]
+    #[derive(Debug, PartialOrd, Ord)] // Hash
     pub struct Color(Boxed<ffi::CoglColor>);
 
     match fn {

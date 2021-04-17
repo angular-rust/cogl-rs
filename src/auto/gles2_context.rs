@@ -1,6 +1,5 @@
 use crate::{Context, Object};
 
-use glib;
 use glib::translate::*;
 use std::{fmt, ptr};
 

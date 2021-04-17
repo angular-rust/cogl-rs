@@ -1,3 +1,9 @@
+#![allow(
+    clippy::too_many_arguments,
+    clippy::let_and_return,
+    clippy::from_over_into
+)]
+
 mod atlas_texture;
 pub use self::atlas_texture::{AtlasTexture, AtlasTextureClass};
 
