@@ -44,6 +44,7 @@ Install Cogl-rs:
 	cargo add cogl-rs
 
 For real example you need also glib, so 
+
 	cargo add glib
 
 ```rust
