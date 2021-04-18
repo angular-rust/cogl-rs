@@ -47,6 +47,8 @@ For real example you need also glib, so
 
 	cargo add glib
 
+**Here is a usage example**
+
 ```rust
 use cogl::*;
 
