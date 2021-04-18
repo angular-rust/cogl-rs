@@ -43,6 +43,61 @@ Install Cogl-rs:
 
 	cargo add cogl-rs
 
+For real example you need also glib, so 
+	cargo add glib
+
+```rust
+use cogl::*;
+
+fn main() {
+    let triangle_vertices = vec![
+        &VertexP2C4 {
+            x: 0.0, y: 0.7, r: 0xFF, g: 0x00, b: 0x00, a: 0xFF,
+        },
+        &VertexP2C4 {
+            x: -0.7, y: -0.7, r: 0x00, g: 0xFF, b: 0x00, a: 0xFF,
+        },
+        &VertexP2C4 {
+            x: 0.7, y: -0.7, r: 0x00, g: 0x00, b: 0xFF, a: 0xFF,
+        },
+    ];
+
+    match Context::new(None) {
+        Ok(ctx) => {
+            let onscreen = Onscreen::new(&ctx, 640, 480);
+
+            onscreen.show();
+            onscreen.set_resizable(true);
+
+            let triangle = Primitive::new_p2c4(
+                &ctx,
+                cogl::VerticesMode::Triangles,
+                triangle_vertices.as_slice(),
+            );
+
+            let pipeline = Pipeline::new(&ctx);
+            let cogl_source = cogl::source_new(&ctx, glib::PRIORITY_DEFAULT);
+            cogl_source.attach(None);
+
+            onscreen.add_frame_callback(|_onscreen, _event, _info| {
+            });
+
+            onscreen.add_dirty_callback(move |onscreen, _info| {
+                // buffers should be enum COGL_BUFFER_BIT_COLOR
+                onscreen.clear4f(1, 0.0, 0.0, 0.0, 1.0);
+                triangle.draw(onscreen, &pipeline);
+                onscreen.swap_buffers();
+            });
+
+            let main_loop = glib::MainLoop::new(None, true);
+            main_loop.run();
+        }
+        Err(err) => {
+            println!("Failed to create context: {}", err);
+        }
+    }
+}
+```
 ## Learn More
 
 * [Manual, Docs, etc](https://angular-rust.github.io/)
